@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>📄 Commande {{ order.reference }}</h2>
+
+<p><strong>Client:</strong> {{ order.first_name }} {{ order.last_name }}</p>
+<p><strong>Statut:</strong> {{ order.get_status_display }}</p>
+<p><strong>Total:</strong> {{ order.total_price }} DT</p>
+
+<hr>
+
+<h4>Produits</h4>
+
+<table class="table">
+
+{% for item in order.items.all %}
+
+<tr>
+<td>{{ item.product.name }}</td>
+<td>{{ item.quantity }}</td>
+<td>{{ item.unit_price }} DT</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% endblock %}

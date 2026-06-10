@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mb-4">
+    <h2 class="fw-bold mb-2">📦 Mes commandes</h2>
+    <p class="text-muted">Suivez l’historique de vos achats et le statut de chaque commande.</p>
+</div>
+
+{% for order in orders %}
+<div class="order-card">
+    <div class="d-flex flex-column flex-md-row justify-content-between gap-2">
+        <div>
+            <h5 class="mb-1">Commande {{ order.reference }}</h5>
+            <p class="text-muted mb-0">{{ order.created_at }}</p>
+        </div>
+        <div class="text-md-end">
+            <div class="fw-bold mb-2">{{ order.total_price }} DT</div>
+            {% if order.status == "pending" %}
+            <span class="status-badge status-pending">{{ order.get_status_display }}</span>
+            {% elif order.status == "delivered" %}
+            <span class="status-badge status-delivered">{{ order.get_status_display }}</span>
+            {% else %}
+            <span class="status-badge status-canceled">{{ order.get_status_display }}</span>
+            {% endif %}
+        </div>
+    </div>
+    <div class="mt-3 d-flex flex-wrap gap-2">
+        <a href="{% url 'order_detail' order.id %}" class="btn btn-outline-dark btn-sm">Détails</a>
+        {% if order.status == "pending" %}
+        <a href="{% url 'cancel_order' order.id %}" class="btn btn-outline-danger btn-sm">Annuler</a>
+        {% endif %}
+    </div>
+</div>
+{% empty %}
+<div class="alert alert-light rounded-4 shadow-sm">
+    Vous n’avez encore aucune commande.
+</div>
+{% endfor %}
+{% endblock %}

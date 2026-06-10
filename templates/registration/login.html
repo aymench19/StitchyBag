@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-5">
+        <div class="auth-card">
+            <h3 class="fw-bold text-center mb-3">Connexion</h3>
+            <p class="text-muted text-center mb-4">Accédez à votre espace et poursuivez vos achats.</p>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="btn btn-dark w-100 mt-3">Se connecter</button>
+            </form>
+            <hr>
+            <p class="text-center mb-0">
+                Pas de compte ? <a href="{% url 'signup' %}">Créer un compte</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
