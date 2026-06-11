@@ -10,6 +10,12 @@
                     <div class="carousel-item {% if forloop.first %}active{% endif %}">
                         <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ product.name }}">
                     </div>
+                    {% empty %}
+                    <div class="carousel-item active">
+                        <div class="d-flex align-items-center justify-content-center text-muted" style="height: 480px; background: #f4eadf;">
+                            Aucune image disponible pour ce produit
+                        </div>
+                    </div>
                     {% endfor %}
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">

@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from cloudinary_storage.storage import MediaCloudinaryStorage
 
 class Product(models.Model):
     name = models.CharField(max_length=200)
@@ -32,7 +33,8 @@ class ProductImage(models.Model):
     )
 
     image = models.ImageField(
-        upload_to='products/'
+        upload_to='products/',
+        storage=MediaCloudinaryStorage()
     )
 
     def __str__(self):

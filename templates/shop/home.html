@@ -37,6 +37,10 @@
             <div class="product-image-wrap">
                 {% if product.images.first %}
                 <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
+                {% else %}
+                <div class="d-flex align-items-center justify-content-center h-100 text-muted" style="height: 260px; background: #f4eadf;">
+                    Pas d'image disponible
+                </div>
                 {% endif %}
                 <span class="product-badge">Nouveau</span>
             </div>

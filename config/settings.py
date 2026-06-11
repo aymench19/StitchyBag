@@ -23,10 +23,10 @@ import cloudinary.api
 load_dotenv()
 
 cloudinary.config(
-    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
-    api_key=os.getenv("CLOUDINARY_API_KEY"),
-    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
-    secure=True
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME") or os.getenv("CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY") or os.getenv("API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET") or os.getenv("API_SECRET"),
+    secure=True,
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -43,12 +43,30 @@ SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-dev-key")
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = [
-     "localhost",
+    "localhost",
     "127.0.0.1",
-    ".onrender.com"
+    ".onrender.com",
 ]
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME") or os.getenv("CLOUD_NAME", ""),
+    "API_KEY": os.getenv("CLOUDINARY_API_KEY") or os.getenv("API_KEY", ""),
+    "API_SECRET": os.getenv("CLOUDINARY_API_SECRET") or os.getenv("API_SECRET", ""),
+    "SECURE": True,
+}
+
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
+MEDIA_URL = "/media/"
 
 
 
