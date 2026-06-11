@@ -15,12 +15,14 @@ import os
 from dotenv import load_dotenv
 import dj_database_url
 
+load_dotenv()
+
 import cloudinary
-import cloudinary_storage.storage
 import cloudinary.uploader
 import cloudinary.api
 
-load_dotenv()
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 cloudinary.config(
     cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME") or os.getenv("CLOUD_NAME"),
@@ -28,9 +30,6 @@ cloudinary.config(
     api_secret=os.getenv("CLOUDINARY_API_SECRET") or os.getenv("API_SECRET"),
     secure=True,
 )
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -54,6 +53,8 @@ CLOUDINARY_STORAGE = {
     "API_SECRET": os.getenv("CLOUDINARY_API_SECRET") or os.getenv("API_SECRET", ""),
     "SECURE": True,
 }
+
+import cloudinary_storage.storage
 
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 

@@ -77,11 +77,19 @@
 
 <div class="container main-shell">
     {% if messages %}
-    <div class="mb-4">
+    <div class="message-stack" aria-live="polite">
         {% for message in messages %}
-        <div class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm">
+        {% if message.tags == 'error' %}
+        <div class="alert alert-danger alert-dismissible fade show rounded-4 shadow-sm" role="alert">
+        {% elif message.tags == 'success' %}
+        <div class="alert alert-success alert-dismissible fade show rounded-4 shadow-sm" role="alert">
+        {% elif message.tags == 'warning' %}
+        <div class="alert alert-warning alert-dismissible fade show rounded-4 shadow-sm" role="alert">
+        {% else %}
+        <div class="alert alert-info alert-dismissible fade show rounded-4 shadow-sm" role="alert">
+        {% endif %}
             {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
         </div>
         {% endfor %}
     </div>
@@ -94,7 +102,12 @@
     <div class="container text-center">
         <h5 class="mb-2">StitchyBag</h5>
         <p class="mb-2">Sacs artisanaux faits à la main avec passion 🧶</p>
-        <p class="small text-white-50 mb-0">© 2026 - Tous droits réservés</p>
+        <div class="footer-socials">
+            <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+            <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="bi bi-tiktok"></i></a>
+        </div>
+        <p class="small text-white-50 mb-0 mt-3">© 2026 - Tous droits réservés</p>
     </div>
 </footer>
 

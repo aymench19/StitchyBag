@@ -10,9 +10,11 @@ from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Sum
 from .models import Product, Order
-from django.contrib.auth import login
-from .forms import SignupForm
+from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
+
+from .forms import SignupForm
 
 from .models import (
     Product,
@@ -49,6 +51,28 @@ def home(request):
             "products": products
         }
     )
+def custom_login(request):
+
+    if request.method == "POST":
+
+        form = AuthenticationForm(request, data=request.POST)
+
+        if form.is_valid():
+            user = form.get_user()
+            auth_login(request, user)
+            messages.success(request, "Connexion réussie.")
+            return redirect("home")
+
+        messages.error(request, "Identifiants incorrects. Vérifiez votre e-mail et votre mot de passe.")
+
+    else:
+        form = AuthenticationForm()
+
+    return render(request, "registration/login.html", {
+        "form": form
+    })
+
+
 def signup(request):
 
     if request.method == "POST":
@@ -59,9 +83,12 @@ def signup(request):
 
             user = form.save()
 
-            login(request, user)
+            auth_login(request, user)
+            messages.success(request, "Compte créé avec succès.")
 
             return redirect("home")
+
+        messages.error(request, "Veuillez corriger les erreurs ci-dessous.")
 
     else:
         form = SignupForm()
@@ -209,6 +236,8 @@ def checkout(request):
 
             cart.clear()
 
+            messages.success(request, "Commande passée avec succès.")
+
             return render(
                 request,
                 "shop/order_result.html",
@@ -216,6 +245,8 @@ def checkout(request):
                     "order": order
                 }
             )
+
+        messages.error(request, "Veuillez corriger les informations du formulaire de commande.")
 
     else:
         form = CheckoutForm()

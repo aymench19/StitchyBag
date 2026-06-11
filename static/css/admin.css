@@ -1,10 +1,10 @@
 :root {
-    --admin-bg: #f7efe7;
-    --admin-panel: #fffdf9;
-    --admin-accent: #7a5845;
-    --admin-accent-dark: #2f241d;
-    --admin-border: #eadfd5;
-    --admin-soft: #fcf4eb;
+    --admin-bg: #f6efe8;
+    --admin-panel: #fcfbf8;
+    --admin-accent: #465C7D;
+    --admin-accent-dark: #2f435d;
+    --admin-border: #dccdbb;
+    --admin-soft: #f6efe6;
 }
 
 body {

@@ -1,3 +1,18 @@
 from django.test import TestCase
 
-# Create your tests here.
+from .forms import SignupForm
+
+
+class SignupFormTests(TestCase):
+    def test_signup_rejects_weak_password(self):
+        form = SignupForm(
+            data={
+                "username": "demo",
+                "email": "demo@example.com",
+                "password1": "password123",
+                "password2": "password123",
+            }
+        )
+
+        self.assertFalse(form.is_valid())
+        self.assertIn("password1", form.errors)

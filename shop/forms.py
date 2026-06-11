@@ -1,6 +1,10 @@
+import re
+
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+
 
 class SignupForm(UserCreationForm):
 
@@ -20,6 +24,31 @@ class SignupForm(UserCreationForm):
             self.fields[field].widget.attrs.update({
                 "class": "form-control"
             })
+
+    def clean_password1(self):
+        password = self.cleaned_data.get("password1")
+
+        if not password:
+            return password
+
+        if len(password) < 8:
+            raise ValidationError("Le mot de passe doit contenir au moins 8 caractères.")
+
+        if not re.search(r"[A-Z]", password):
+            raise ValidationError("Le mot de passe doit contenir au moins une lettre majuscule.")
+
+        if not re.search(r"[a-z]", password):
+            raise ValidationError("Le mot de passe doit contenir au moins une lettre minuscule.")
+
+        if not re.search(r"\d", password):
+            raise ValidationError("Le mot de passe doit contenir au moins un chiffre.")
+
+        if not re.search(r"[^A-Za-z0-9]", password):
+            raise ValidationError("Le mot de passe doit contenir au moins un caractère spécial.")
+
+        return password
+
+
 class CheckoutForm(forms.Form):
 
     first_name = forms.CharField(

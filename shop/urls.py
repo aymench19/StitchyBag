@@ -46,6 +46,12 @@ urlpatterns = [
         name='checkout'
     ),
 
+    path(
+        'login/',
+        views.custom_login,
+        name='login'
+    ),
+
   
     path(
     'dashboard/',
