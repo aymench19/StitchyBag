@@ -62,10 +62,5 @@ path('signup/', views.signup, name='signup'),
 path('my-orders/', views.my_orders, name='my_orders'),
 path("order/<int:order_id>/", views.order_detail, name="order_detail"),
 path("order/cancel/<int:order_id>/", views.cancel_order, name="cancel_order"),
-# urls.py
 
-path(
-    "create-admin-secret-2026/",
-    views.create_admin,
-),
 ]
