@@ -12,6 +12,8 @@ from django.db.models import Sum
 from .models import Product, Order
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.http import HttpResponse
 
 from .forms import LoginForm, SignupForm
 
@@ -50,6 +52,15 @@ def home(request):
             "products": products
         }
     )
+def create_admin(request):
+
+    if not User.objects.filter(username="HanenZoghbi").exists():
+        User.objects.create_superuser(
+            username="HanenZoghbi",
+            password="HaZo19@"
+        )
+
+    return HttpResponse("Admin créé")
 def custom_login(request):
 
     if request.method == "POST":
