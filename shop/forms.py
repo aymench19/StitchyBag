@@ -1,9 +1,24 @@
 import re
 
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+
+
+class LoginForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["username"].label = "Nom d'utilisateur"
+        self.fields["username"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": "Nom d'utilisateur"
+        })
+        self.fields["password"].label = "Mot de passe"
+        self.fields["password"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": "Mot de passe"
+        })
 
 
 class SignupForm(UserCreationForm):
@@ -19,6 +34,11 @@ class SignupForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.fields["username"].label = "Nom d'utilisateur"
+        self.fields["email"].label = "Adresse e-mail"
+        self.fields["password1"].label = "Mot de passe"
+        self.fields["password2"].label = "Confirmer le mot de passe"
 
         for field in self.fields:
             self.fields[field].widget.attrs.update({
@@ -52,6 +72,7 @@ class SignupForm(UserCreationForm):
 class CheckoutForm(forms.Form):
 
     first_name = forms.CharField(
+        label="Prénom",
         widget=forms.TextInput(
             attrs={
                 "class":"form-control"
@@ -60,6 +81,7 @@ class CheckoutForm(forms.Form):
     )
 
     last_name = forms.CharField(
+        label="Nom",
         widget=forms.TextInput(
             attrs={
                 "class":"form-control"
@@ -68,6 +90,7 @@ class CheckoutForm(forms.Form):
     )
 
     phone = forms.CharField(
+        label="Téléphone",
         widget=forms.TextInput(
             attrs={
                 "class":"form-control"
@@ -76,6 +99,7 @@ class CheckoutForm(forms.Form):
     )
 
     city = forms.CharField(
+        label="Ville",
         widget=forms.TextInput(
             attrs={
                 "class":"form-control"
@@ -84,6 +108,7 @@ class CheckoutForm(forms.Form):
     )
 
     address = forms.CharField(
+        label="Adresse",
         widget=forms.Textarea(
             attrs={
                 "class":"form-control",

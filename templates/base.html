@@ -54,19 +54,19 @@
                     <form method="post" action="{% url 'logout' %}" class="d-inline">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-outline-dark btn-sm ms-2">
-                            <i class="bi bi-box-arrow-right me-1"></i> Logout
+                            <i class="bi bi-box-arrow-right me-1"></i> Déconnexion
                         </button>
                     </form>
                 </li>
                 {% else %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'login' %}">
-                        <i class="bi bi-person me-1"></i> Login
+                        <i class="bi bi-person me-1"></i> Connexion
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="btn btn-dark ms-2" href="{% url 'signup' %}">
-                        Créer compte
+                        Créer un compte
                     </a>
                 </li>
                 {% endif %}
@@ -103,9 +103,9 @@
         <h5 class="mb-2">StitchyBag</h5>
         <p class="mb-2">Sacs artisanaux faits à la main avec passion 🧶</p>
         <div class="footer-socials">
-            <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
-            <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
-            <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="bi bi-tiktok"></i></a>
+            <a href="https://www.facebook.com/profile.php?id=61569216085939" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="https://www.instagram.com/stitchybag/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+            <a href="https://www.tiktok.com/@crochet_by_hanen?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="bi bi-tiktok"></i></a>
         </div>
         <p class="small text-white-50 mb-0 mt-3">© 2026 - Tous droits réservés</p>
     </div>

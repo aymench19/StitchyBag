@@ -12,9 +12,8 @@ from django.db.models import Sum
 from .models import Product, Order
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm
 
-from .forms import SignupForm
+from .forms import LoginForm, SignupForm
 
 from .models import (
     Product,
@@ -55,7 +54,7 @@ def custom_login(request):
 
     if request.method == "POST":
 
-        form = AuthenticationForm(request, data=request.POST)
+        form = LoginForm(request, data=request.POST)
 
         if form.is_valid():
             user = form.get_user()
@@ -66,7 +65,7 @@ def custom_login(request):
         messages.error(request, "Identifiants incorrects. Vérifiez votre e-mail et votre mot de passe.")
 
     else:
-        form = AuthenticationForm()
+        form = LoginForm()
 
     return render(request, "registration/login.html", {
         "form": form

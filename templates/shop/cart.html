@@ -15,7 +15,7 @@
                 {% if item.product.images.first %}
                 <img src="{{ item.product.images.first.image.url }}" class="cart-item-image" alt="{{ item.product.name }}">
                 {% else %}
-                <div class="cart-item-image d-flex align-items-center justify-content-center text-muted" style="background: #f4eadf;">No image</div>
+                <div class="cart-item-image d-flex align-items-center justify-content-center text-muted" style="background: #f4eadf;">Aucune image</div>
                 {% endif %}
                 <div>
                     <h5 class="mb-1">{{ item.product.name }}</h5>
