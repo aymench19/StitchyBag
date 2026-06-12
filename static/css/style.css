@@ -45,6 +45,17 @@ body a {
     font-size: 1.15rem;
 }
 
+.navbar-logo {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    border-radius: 14px;
+}
+
+.navbar-brand-text {
+    font-weight: 700;
+}
+
 .nav-link {
     color: var(--brown-dark) !important;
     font-weight: 500;

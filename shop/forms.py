@@ -117,3 +117,15 @@ class CheckoutForm(forms.Form):
         )
     )
 
+    comment = forms.CharField(
+        label="Commentaire",
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                "class":"form-control",
+                "rows":3,
+                "placeholder":"Ajoutez un commentaire pour votre commande..."
+            }
+        )
+    )
+

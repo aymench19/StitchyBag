@@ -71,6 +71,8 @@ class Order(models.Model):
 
     city = models.CharField(max_length=100)
 
+    comment = models.TextField(blank=True, default="")
+
     total_price = models.DecimalField(
         max_digits=10,
         decimal_places=2,

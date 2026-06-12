@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from .forms import SignupForm
+from .forms import CheckoutForm, SignupForm
 
 
 class SignupFormTests(TestCase):
@@ -16,3 +16,11 @@ class SignupFormTests(TestCase):
 
         self.assertFalse(form.is_valid())
         self.assertIn("password1", form.errors)
+
+
+class CheckoutFormTests(TestCase):
+    def test_checkout_form_contains_comment_field(self):
+        form = CheckoutForm()
+
+        self.assertIn("comment", form.fields)
+        self.assertEqual(form.fields["comment"].label, "Commentaire")

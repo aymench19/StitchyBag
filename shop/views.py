@@ -217,6 +217,7 @@ def checkout(request):
     phone=form.cleaned_data["phone"],
     city=form.cleaned_data["city"],
     address=form.cleaned_data["address"],
+    comment=form.cleaned_data.get("comment", ""),
     total_price=cart.get_total_price()
 )
 
