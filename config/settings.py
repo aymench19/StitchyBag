@@ -76,6 +76,7 @@ MEDIA_URL = "/media/"
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -175,6 +176,42 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
 ]
+
+JAZZMIN_SETTINGS = {
+    "site_title": "StitchyBag Admin",
+    "site_header": "StitchyBag",
+    "site_brand": "StitchyBag Admin",
+    "welcome_sign": "Bienvenue dans l'administration StitchyBag",
+    "copyright": "StitchyBag © 2026",
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.group": "fas fa-users",
+        "shop.order": "fas fa-shopping-bag",
+        "shop.product": "fas fa-box",
+        "shop.productimage": "fas fa-images",
+    },
+    "custom_css": "css/admin.css",
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "theme": "cosmo",
+    "dark_mode_theme": "darkly",
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "accent": "#465C7D",
+    "navbar": "#ffffff",
+    "sidebar": "#f7efe7",
+    "sidebar_hover": "#efe2d1",
+    "sidebar_text_active": "#2f435d",
+    "icon_color": "#465C7D",
+    "table_head_background": "#f4ece3",
+    "table_head_text": "#2f435d",
+}
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
