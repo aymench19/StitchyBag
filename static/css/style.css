@@ -49,8 +49,8 @@ body a {
     width: 72px;
     height: 72px;
     object-fit: contain;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(36, 52, 71, 0.16);
+    border-radius: 0;
+    box-shadow: none;
 }
 
 .navbar-brand {
@@ -62,8 +62,8 @@ body a {
     height: 78px;
     object-fit: contain;
     margin: 0 auto 0.85rem;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(36, 52, 71, 0.16);
+    border-radius: 0;
+    box-shadow: none;
 }
 
 .nav-link {
