@@ -193,12 +193,10 @@ JAZZMIN_SETTINGS = {
         "shop.product": "fas fa-box",
         "shop.productimage": "fas fa-images",
     },
-    "custom_css": "css/admin.css",
 }
 
 JAZZMIN_UI_TWEAKS = {
     "theme": "cosmo",
-    "dark_mode_theme": "darkly",
     "navbar_small_text": False,
     "footer_small_text": False,
     "body_small_text": False,
