@@ -10,10 +10,13 @@
 {% endblock %}
 
 {% block branding %}
-<h1 id="site-name">
+<h1 id="site-name" class="admin-branding-title">
     <a href="{% url 'admin:index' %}">
-        <span style="margin-right:0.35rem;">👜StitchyBag</span> 
-
+        <img src="{% static 'images/logo.png' %}" alt="StitchyBag" class="admin-brand-logo">
+        <span>StitchyBag</span>
     </a>
 </h1>
+<div id="admin-quick-links">
+    <a href="/" class="admin-quick-link">Voir le site</a>
+</div>
 {% endblock %}
