@@ -46,14 +46,24 @@ body a {
 }
 
 .navbar-logo {
-    width: 48px;
-    height: 48px;
+    width: 72px;
+    height: 72px;
     object-fit: contain;
-    border-radius: 14px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(36, 52, 71, 0.16);
 }
 
-.navbar-brand-text {
-    font-weight: 700;
+.navbar-brand {
+    padding: 0;
+}
+
+.footer-logo {
+    width: 78px;
+    height: 78px;
+    object-fit: contain;
+    margin: 0 auto 0.85rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(36, 52, 71, 0.16);
 }
 
 .nav-link {
