@@ -1,17 +1,41 @@
 {% extends "admin/base.html" %}
 {% load static %}
 
-{% block branding %}
-<div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-    <h1 id="site-name" style="margin: 0;">
-        <a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a>
-    </h1>
-    <a href="{% url 'home' %}" style="display: inline-block; padding: 6px 12px; background: #417690; color: #fff; text-decoration: none; border-radius: 4px; font-size: 13px;">
-        Retour au site
-    </a>
-</div>
-{% endblock %}
-
 {% block extrahead %}
 {{ block.super }}
+<style>
+    #site-return-button {
+        position: fixed;
+        top: 12px;
+        right: 16px;
+        z-index: 1100;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 12px;
+        background: #417690;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    #site-return-button:hover {
+        background: #355c74;
+        color: #fff;
+        text-decoration: none;
+    }
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if (!document.getElementById('site-return-button')) {
+            const link = document.createElement('a');
+            link.id = 'site-return-button';
+            link.href = '{% url "home" %}';
+            link.textContent = 'Retour au site';
+            document.body.appendChild(link);
+        }
+    });
+</script>
 {% endblock %}
