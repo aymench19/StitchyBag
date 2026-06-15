@@ -6,6 +6,18 @@ from .forms import CheckoutForm, SignupForm
 from .models import Order, Product
 
 
+class HomePageTests(TestCase):
+    def test_home_page_shows_pagination_when_more_than_nine_products_exist(self):
+        for index in range(10):
+            Product.objects.create(name=f"Produit {index}", description="Desc", price=10, stock=5)
+
+        response = self.client.get(reverse("home"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "page-link")
+        self.assertContains(response, "2")
+
+
 class SignupFormTests(TestCase):
     def test_signup_rejects_weak_password(self):
         form = SignupForm(

@@ -27,27 +27,17 @@ from .forms import (
     CheckoutForm
 )
 def home(request):
+    products = Product.objects.all().order_by('-created_at')
 
-    products = Product.objects.all()
-
-    paginator = Paginator(
-        products,
-        9
-    )
-
-    page_number = request.GET.get(
-        "page"
-    )
-
-    products = paginator.get_page(
-        page_number
-    )
+    paginator = Paginator(products, 9)
+    page_number = request.GET.get("page")
+    products_page = paginator.get_page(page_number)
 
     return render(
         request,
         "shop/home.html",
         {
-            "products": products
+            "products": products_page,
         }
     )
 def custom_login(request):
