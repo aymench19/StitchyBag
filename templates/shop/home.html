@@ -3,7 +3,7 @@
 
 {% block extra_head %}
 <style>
-.sb-hero{position:relative;display:grid;grid-template-columns:1fr 1fr;min-height:520px;overflow:hidden;background:#0F1A2B;border-radius:28px;margin:0 16px 40px;box-shadow:0 40px 100px rgba(10,18,38,.32)}
+.sb-hero{position:relative;display:grid;grid-template-columns:1fr 1fr;min-height:520px;overflow:hidden;background:#13213A;border-radius:28px;margin:0 16px 40px;box-shadow:0 40px 100px rgba(10,18,38,.32)}
 .sb-hero-texture{position:absolute;inset:0;background-image:radial-gradient(circle at 20% 15%,rgba(201,169,110,.12) 0%,transparent 40%),radial-gradient(circle at 80% 85%,rgba(201,169,110,.07) 0%,transparent 36%),repeating-linear-gradient(45deg,transparent,transparent 18px,rgba(255,255,255,.018) 18px,rgba(255,255,255,.018) 19px),repeating-linear-gradient(-45deg,transparent,transparent 18px,rgba(255,255,255,.018) 18px,rgba(255,255,255,.018) 19px);pointer-events:none}
 .sb-hero-content{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:center;padding:56px 52px 56px 48px}
 .sb-hero-eyebrow{display:inline-flex;align-items:center;gap:8px;color:#C9A96E;font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;margin-bottom:28px}
@@ -144,41 +144,7 @@
   });
 </script>
 
-<!-- ========== FEATURES STRIP ========== -->
-<div style="background:#fff;border-bottom:1px solid #EDE0D0;padding:22px 0;">
-  <div class="container">
-    <div class="row g-0 align-items-start">
-      <div class="col-6 col-md-3 sb-feature">
-        <div class="sb-feature-icon"><i class="bi bi-hand-index-thumb"></i></div>
-        <div>
-          <strong style="font-size:13px;display:block;margin-bottom:2px;color:#1B2D45;">Fait main</strong>
-          <span style="font-size:12px;color:#6B7A8D;line-height:1.4;">Chaque pièce fabriquée avec amour</span>
-        </div>
-      </div>
-      <div class="col-6 col-md-3 sb-feature">
-        <div class="sb-feature-icon"><i class="bi bi-leaf"></i></div>
-        <div>
-          <strong style="font-size:13px;display:block;margin-bottom:2px;color:#1B2D45;">Matières naturelles</strong>
-          <span style="font-size:12px;color:#6B7A8D;line-height:1.4;">Coton de qualité, respectueux de l'environnement</span>
-        </div>
-      </div>
-      <div class="col-6 col-md-3 sb-feature">
-        <div class="sb-feature-icon"><i class="bi bi-gem"></i></div>
-        <div>
-          <strong style="font-size:13px;display:block;margin-bottom:2px;color:#1B2D45;">Pièces uniques</strong>
-          <span style="font-size:12px;color:#6B7A8D;line-height:1.4;">Modèles exclusifs en petites séries</span>
-        </div>
-      </div>
-      <div class="col-6 col-md-3 sb-feature" style="border-right:none;">
-        <div class="sb-feature-icon"><i class="bi bi-truck"></i></div>
-        <div>
-          <strong style="font-size:13px;display:block;margin-bottom:2px;color:#1B2D45;">Livraison rapide</strong>
-          <span style="font-size:12px;color:#6B7A8D;line-height:1.4;">3 à 8 jours partout en Grand Tunis</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+
 
 <!-- ========== NOUVELLE COLLECTION ========== -->
 <section id="collection" style="padding:52px 0 60px;">
@@ -284,9 +250,15 @@
         </li>
         {% endif %}
         {% for p in products.paginator.page_range %}
-        <li class="page-item {% if products.number == p %}active{% endif %}">
+        {% if products.number == p %}
+        <li class="page-item active" aria-current="page">
+          <span class="page-link">{{ p }}</span>
+        </li>
+        {% else %}
+        <li class="page-item">
           <a class="page-link" href="?page={{ p }}">{{ p }}</a>
         </li>
+        {% endif %}
         {% endfor %}
         {% if products.has_next %}
         <li class="page-item">

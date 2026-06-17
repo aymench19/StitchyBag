@@ -215,11 +215,31 @@ body {
 
 /* ── Pagination ── */
 .pagination .page-link {
-  color: var(--navy); border-color: var(--cream-mid);
-  border-radius: 8px !important; margin: 0 2px; font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #6B7A8D;
+  background: #fff;
+  border: 1px solid var(--cream-mid);
+  border-radius: 8px !important;
+  margin: 0 2px;
+  min-width: 38px;
+  padding: 0.55rem 0.75rem;
+  font-size: 13px;
+}
+.pagination .page-item.active .page-link,
+.pagination .page-item.active .page-link:hover,
+.pagination .page-item.active .page-link:focus {
+  background: var(--navy) !important;
+  border-color: var(--cream-mid) !important;
+  color: #fff !important;
+  font-weight: 700;
+  cursor: default;
+  text-decoration: none !important;
+  box-shadow: none !important;
 }
 .pagination .page-item.active .page-link {
-  background: var(--navy); border-color: var(--navy);
+  pointer-events: none;
 }
 .pagination .page-link:hover { background: var(--cream-mid); color: var(--navy); }
 

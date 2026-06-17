@@ -1,7 +1,7 @@
 /* StitchyBag — Design System (Bootstrap-compatible, sb- prefix) */
 
 :root {
-  --navy: #1B2D45;
+  --navy: #172a43;
   --navy-dark: #13213A;
   --cream: #F5EDE3;
   --cream-light: #FAF6F1;
@@ -310,6 +310,124 @@ body {
   height: 2px; background: var(--gold); border-radius: 2px;
 }
 
+/* ── Navbar responsive ── */
+.navbar {
+  padding: 0;
+}
+.navbar .container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 68px;
+  height: auto;
+}
+.navbar-brand {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.8rem 0;
+}
+.navbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.navbar-nav .nav-item {
+  width: auto;
+}
+.navbar-nav .nav-link {
+  display: inline-flex;
+  align-items: center;
+}
+.navbar-toggler {
+  border: none;
+  color: var(--navy);
+}
+.navbar-toggler-icon {
+  filter: invert(0.2);
+}
+@media (max-width: 991px) {
+  .navbar .container {
+    min-height: auto;
+    padding: 0.75rem 0.75rem;
+  }
+  .navbar-brand {
+    flex: 1 1 100%;
+  }
+  .navbar-toggler {
+    margin-left: auto;
+  }
+  .navbar-nav {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  .navbar-nav .nav-link {
+    width: 100%;
+    padding: 0.75rem 1rem !important;
+    border-radius: 0;
+  }
+  .navbar-nav .nav-item + .nav-item {
+    margin-top: 0.25rem;
+  }
+  .navbar-collapse .d-flex.align-items-center {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    border-top: 1px solid rgba(27,45,69,.08);
+  }
+  .sb-search-wrap {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 0.5rem;
+  }
+  .sb-search-form {
+    flex: 1 1 100%;
+    width: 100%;
+    max-width: 0;
+    transition: max-width .25s ease, opacity .2s ease;
+  }
+  .sb-search-form.sb-search-open {
+    max-width: 100%;
+    opacity: 1;
+  }
+  .sb-search-form input {
+    width: calc(100% - 50px);
+  }
+}
+@media (max-width: 767px) {
+  .navbar .container {
+    padding: 0.6rem 0.75rem;
+  }
+  .navbar-brand img {
+    height: 48px;
+  }
+  .navbar-toggler {
+    margin-left: auto;
+  }
+  .navbar .d-flex.align-items-center {
+    padding-top: 0.5rem;
+  }
+  .sb-search-form input {
+    width: 100%;
+  }
+}
+@media (max-width: 575px) {
+  .navbar-brand img {
+    height: 42px;
+  }
+  .navbar-nav .nav-link {
+    font-size: 13px !important;
+    padding: 0.75rem 0.85rem !important;
+  }
+  .navbar .d-flex.align-items-center {
+    gap: 0.5rem;
+  }
+}
+
 /* ── Feature strip ── */
 .sb-feature {
   display: flex;
@@ -483,14 +601,59 @@ body {
 .sb-newsletter-form button:hover { background: var(--gold-light); }
 
 /* ── Pagination ── */
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem;
+}
 .pagination .page-link {
-  color: var(--navy); border-color: var(--cream-mid);
-  border-radius: 8px !important; margin: 0 2px; font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #6B7A8D;
+  background: #fff;
+  border: 1px solid var(--cream-mid);
+  border-radius: 8px !important;
+  margin: 0;
+  min-width: 38px;
+  padding: 0.55rem 0.75rem;
+  text-align: center;
+  font-size: 13px;
+  transition: background .2s ease, color .2s ease;
 }
-.pagination .page-item.active .page-link {
-  background: var(--navy); border-color: var(--navy);
+.pagination .page-item.active .page-link,
+.pagination .page-item.active .page-link:hover,
+.pagination .page-item.active .page-link:focus,
+.active > .page-link,
+.page-link.active {
+  background: var(--navy) !important;
+  border-color: var(--cream-mid) !important;
+  color: #fff !important;
+  font-weight: 700;
+  cursor: default;
+  text-decoration: none !important;
+  box-shadow: none !important;
 }
-.pagination .page-link:hover { background: var(--cream-mid); color: var(--navy); }
+.pagination .page-item.active .page-link,
+.active > .page-link,
+.page-link.active {
+  pointer-events: none !important;
+}
+.pagination .page-item.disabled .page-link {
+  color: #408ad4;
+}
+.pagination .page-link:hover {
+  background: var(--cream-mid);
+  color: var(--navy);
+}
+
+@media (max-width: 575px) {
+  .pagination .page-link {
+    min-width: 34px;
+    padding: 0.5rem 0.65rem;
+  }
+}
 
 /* ── Inner pages ── */
 .inner-wrap { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
