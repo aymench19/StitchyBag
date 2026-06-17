@@ -43,7 +43,8 @@ def home(request):
             Favorite.objects.filter(user=request.user).values_list("product_id", flat=True)
         )
 
-    hero_image = HeroImage.objects.filter(is_active=True).first()
+    hero_images = HeroImage.objects.order_by("-is_active", "-created_at")
+    hero_image = hero_images.first()
 
     return render(
         request,
@@ -53,6 +54,7 @@ def home(request):
             "query": query,
             "sort": sort,
             "favorite_product_ids": favorite_product_ids,
+            "hero_images": hero_images,
             "hero_image": hero_image,
         }
     )
