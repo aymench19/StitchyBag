@@ -9,35 +9,51 @@ from django.shortcuts import (
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Sum
-from .models import Product, Order
+from django.utils.http import url_has_allowed_host_and_scheme
+from .models import Product, Order, OrderItem, Favorite, HeroImage
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
 
 from .forms import LoginForm, SignupForm
-
-from .models import (
-    Product,
-    Order,
-    OrderItem
-)
-
+from .forms import CheckoutForm
 from .cart import Cart
-
-from .forms import (
-    CheckoutForm
-)
+from django.contrib.auth import get_user_model
 def home(request):
-    products = Product.objects.all().order_by('-created_at')
+    products = Product.objects.all()
 
-    paginator = Paginator(products, 9)
+    query = request.GET.get("q", "").strip()
+    if query:
+        products = products.filter(name__icontains=query)
+
+    sort = request.GET.get("sort", "new")
+    if sort == "price_asc":
+        products = products.order_by("price")
+    elif sort == "price_desc":
+        products = products.order_by("-price")
+    else:
+        products = products.order_by("-created_at")
+
+    paginator = Paginator(products, 8)
     page_number = request.GET.get("page")
     products_page = paginator.get_page(page_number)
+
+    favorite_product_ids = []
+    if request.user.is_authenticated:
+        favorite_product_ids = list(
+            Favorite.objects.filter(user=request.user).values_list("product_id", flat=True)
+        )
+
+    hero_image = HeroImage.objects.filter(is_active=True).first()
 
     return render(
         request,
         "shop/home.html",
         {
             "products": products_page,
+            "query": query,
+            "sort": sort,
+            "favorite_product_ids": favorite_product_ids,
+            "hero_image": hero_image,
         }
     )
 def custom_login(request):
@@ -92,11 +108,16 @@ def product_detail(request, pk):
         pk=pk
     )
 
+    is_favorite = False
+    if request.user.is_authenticated:
+        is_favorite = Favorite.objects.filter(user=request.user, product=product).exists()
+
     return render(
         request,
         "shop/product_detail.html",
         {
-            "product": product
+            "product": product,
+            "is_favorite": is_favorite,
         }
     )
 def cart_add(request, product_id):
@@ -332,3 +353,56 @@ def cancel_order(request, order_id):
         order.save()
 
     return redirect("my_orders")
+
+
+@login_required
+def profile(request):
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    favorites = Product.objects.filter(
+        favorited_by__user=request.user
+    ).distinct()
+
+    if request.method == 'POST':
+        from .forms import ProfileForm
+        form = ProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Vos informations ont été mises à jour.")
+            return redirect('profile')
+        else:
+            messages.error(request, "Veuillez corriger les erreurs dans le formulaire.")
+    else:
+        from .forms import ProfileForm
+        form = ProfileForm(instance=request.user)
+
+    return render(
+        request,
+        "shop/profile.html",
+        {
+            "orders": orders,
+            "favorites": favorites,
+            "form": form,
+        }
+    )
+
+
+@login_required
+def toggle_favorite(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+
+    fav, created = Favorite.objects.get_or_create(
+        user=request.user,
+        product=product
+    )
+
+    if not created:
+        fav.delete()
+        messages.success(request, "Produit retiré des favoris.")
+    else:
+        messages.success(request, "Produit ajouté aux favoris.")
+
+    next_url = request.POST.get('next') or request.META.get('HTTP_REFERER') or '/'
+    if not url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+        next_url = '/'
+
+    return redirect(next_url)

@@ -1,86 +1,331 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="hero-section mb-4">
-    <div class="row align-items-center g-4">
-        <div class="col-lg-7">
-            <span class="eyebrow">Artisanat & élégance</span>
-            <h1>Des sacs crochet uniques, pensés pour sublimer chaque moment.</h1>
-            <p>Découvrez une collection de pièces faites à la main, alliant confort, texture et style contemporain.</p>
-            <div class="d-flex flex-wrap gap-2 mt-3">
-                <a href="#products" class="btn btn-light btn-lg">Explorer la collection</a>
-                <a href="{% url 'cart' %}" class="btn btn-outline-light btn-lg">Voir mon panier</a>
-            </div>
+
+<!-- ========== HERO (compact) ========== -->
+<section style="background:#1B2D45;min-height:320px;display:flex;overflow:hidden;position:relative;">
+  <!-- Texte gauche -->
+  <div style="flex:0 0 60%;display:flex;align-items:center;padding:0 32px 0 60px;position:relative;z-index:2;">
+    <div>
+      <div style="font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#D9C4A0;margin-bottom:10px;display:flex;align-items:center;gap:7px;">
+        <span style="font-size:13px;">♡</span> Fait main, avec amour
+      </div>
+      <h1 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(1.7rem,3.1vw,2.5rem);font-weight:600;line-height:1.1;color:#fff;margin:0 0 10px;">
+        L'élégance<br>au bout <em style="color:#C9A96E;font-style:italic;">du fil</em>
+      </h1>
+      <p style="font-size:13px;color:rgba(255,255,255,.68);line-height:1.6;max-width:320px;margin-bottom:18px;">
+        Découvrez des sacs crochetés à la main, uniques et intemporels, pour sublimer chaque moment.
+      </p>
+      <a href="#collection"
+         style="display:inline-flex;align-items:center;gap:9px;background:#C9A96E;color:#13213A;font-weight:600;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;padding:11px 22px;border-radius:50px;text-decoration:none;">
+        Découvrir la collection <i class="bi bi-arrow-right"></i>
+      </a>
+      <div style="display:flex;gap:6px;margin-top:18px;">
+        <span style="width:24px;height:3px;border-radius:3px;background:#C9A96E;"></span>
+        <span style="width:16px;height:3px;border-radius:3px;background:rgba(255,255,255,.25);"></span>
+        <span style="width:16px;height:3px;border-radius:3px;background:rgba(255,255,255,.25);"></span>
+        <span style="width:16px;height:3px;border-radius:3px;background:rgba(255,255,255,.25);"></span>
+      </div>
+    </div>  
+  </div>
+  <!-- Image droite + overlay fondu -->
+  <div style="flex:1;position:relative;overflow:hidden;min-height:320px;display:flex;align-items:center;justify-content:center;background:#13213A;">
+    <img src="{% if hero_image %}{{ hero_image.image.url }}{% else %}{% static 'images/logo.png' %}{% endif %}"
+         alt="Hero"
+         style="max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block;transition:transform .35s ease;"
+         onmouseover="this.style.transform='scale(1.05)'"
+         onmouseout="this.style.transform='scale(1)'">
+    <div style="position:absolute;inset:0;background:linear-gradient(to right,#1B2D45 0%,rgba(27,45,69,.3) 40%,transparent 70%);z-index:1;"></div>
+    <div style="position:absolute;inset:0;" aria-hidden="true"></div>
+  </div>
+</section>
+
+<!-- ========== FEATURES STRIP ========== -->
+<div style="background:#fff;border-bottom:1px solid #EDE0D0;padding:22px 0;">
+  <div class="container">
+    <div class="row g-0 align-items-start">
+      <div class="col-6 col-md-3 sb-feature">
+        <div class="sb-feature-icon"><i class="bi bi-hand-index-thumb"></i></div>
+        <div>
+          <strong style="font-size:13px;display:block;margin-bottom:2px;color:#1B2D45;">Fait main</strong>
+          <span style="font-size:12px;color:#6B7A8D;line-height:1.4;">Chaque pièce fabriquée avec amour</span>
         </div>
-        <div class="col-lg-5">
-            <div class="hero-card">
-                <h5 class="mb-3">Pourquoi nos clientes adorent</h5>
-                <ul class="list-unstyled mb-0">
-                    <li class="mb-2"><i class="bi bi-check-circle me-2"></i>Matériaux soigneusement sélectionnés</li>
-                    <li class="mb-2"><i class="bi bi-check-circle me-2"></i>Finitions artisanales élégantes</li>
-                    <li><i class="bi bi-check-circle me-2"></i>Livraison rapide et suivi simple</li>
-                </ul>
-            </div>
+      </div>
+      <div class="col-6 col-md-3 sb-feature">
+        <div class="sb-feature-icon"><i class="bi bi-leaf"></i></div>
+        <div>
+          <strong style="font-size:13px;display:block;margin-bottom:2px;color:#1B2D45;">Matières naturelles</strong>
+          <span style="font-size:12px;color:#6B7A8D;line-height:1.4;">Coton de qualité, respectueux de l'environnement</span>
         </div>
+      </div>
+      <div class="col-6 col-md-3 sb-feature">
+        <div class="sb-feature-icon"><i class="bi bi-gem"></i></div>
+        <div>
+          <strong style="font-size:13px;display:block;margin-bottom:2px;color:#1B2D45;">Pièces uniques</strong>
+          <span style="font-size:12px;color:#6B7A8D;line-height:1.4;">Modèles exclusifs en petites séries</span>
+        </div>
+      </div>
+      <div class="col-6 col-md-3 sb-feature" style="border-right:none;">
+        <div class="sb-feature-icon"><i class="bi bi-truck"></i></div>
+        <div>
+          <strong style="font-size:13px;display:block;margin-bottom:2px;color:#1B2D45;">Livraison rapide</strong>
+          <span style="font-size:12px;color:#6B7A8D;line-height:1.4;">3 à 8 jours partout en Grand Tunis</span>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
-<div class="section-title d-flex justify-content-between align-items-center">
-    <h3 class="mb-0">Nos produits</h3>
-    <span class="text-muted">Collection signature</span>
-</div>
+<!-- ========== NOUVELLE COLLECTION ========== -->
+<section id="collection" style="padding:52px 0 60px;">
+  <div class="container">
 
-<div id="products" class="row g-4">
-    {% for product in products %}
-    <div class="col-md-6 col-lg-4">
-        <div class="card product-card h-100">
-            <div class="product-image-wrap">
-                {% if product.images.first %}
-                <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}">
-                {% else %}
-                <div class="d-flex align-items-center justify-content-center h-100 text-muted" style="height: 260px; background: #f4eadf;">
-                    Pas d'image disponible
-                </div>
-                {% endif %}
-                <span class="product-badge">Nouveau</span>
-            </div>
-            <div class="card-body d-flex flex-column">
-                <div class="d-flex justify-content-between align-items-start gap-2">
-                    <h5 class="product-title">{{ product.name }}</h5>
-                    <span class="product-price">{{ product.price }} DT</span>
-                </div>
-                <p class="product-description">{{ product.description|truncatechars:90 }}</p>
-                <div class="mt-auto d-flex gap-2">
-                    <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-dark flex-grow-1">Voir détails</a>
-                    <a href="{% url 'cart_add' product.id %}" class="btn btn-dark">Ajouter</a>
-                </div>
-            </div>
-        </div>
+    <!-- Header section -->
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
+      <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.9rem;font-weight:600;margin:0;color:#1B2D45;">
+        Nouvelle collection <span style="color:#C9A96E;">♡</span>
+      </h2>
+      <div class="d-flex align-items-center gap-2">
+        <form method="get" action="{% url 'home' %}#collection" class="d-flex align-items-center gap-2">
+          {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+          <select name="sort" onchange="this.form.submit()" class="sb-sort-select">
+            <option value="new" {% if sort == 'new' %}selected{% endif %}>Plus récents</option>
+            <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>Prix croissant</option>
+            <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Prix décroissant</option>
+          </select>
+        </form>
+        <a href="{% url 'home' %}#collection"
+           style="display:inline-flex;align-items:center;gap:8px;background:#1B2D45;color:#fff;font-size:12px;font-weight:600;padding:8px 18px;border-radius:50px;text-decoration:none;">
+          Voir tout <i class="bi bi-arrow-right"></i>
+        </a>
+      </div>
     </div>
-    {% endfor %}
-</div>
 
-{% if products.paginator.num_pages > 1 %}
-<nav class="mt-4 d-flex justify-content-center">
-    <ul class="pagination">
+    {% if query %}
+    <div class="mb-3" style="font-size:13px;color:#6B7A8D;">
+      Résultats pour « <strong style="color:#1B2D45;">{{ query }}</strong> »
+      <a href="{% url 'home' %}#collection" style="color:#C9A96E;margin-left:8px;">Effacer ✕</a>
+    </div>
+    {% endif %}
+
+    <!-- Grille produits — cartes parfaitement uniformes -->
+    <div class="row g-3 align-items-stretch">
+      {% for product in products %}
+      <div class="col-6 col-md-4 col-lg-3 d-flex">
+        <div class="sb-product-card w-100 d-flex flex-column">
+          <!-- Image — ratio fixe identique pour toutes les cartes -->
+          <div class="sb-product-img">
+            {% if product.images.first %}
+              <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" loading="lazy">
+            {% else %}
+              <div class="sb-product-img-placeholder">
+                <i class="bi bi-image"></i>
+              </div>
+            {% endif %}
+            {% if product.stock > 0 %}
+              <span class="sb-badge">Nouveau</span>
+            {% else %}
+              <span class="sb-badge" style="background:#6B7A8D;">Rupture</span>
+            {% endif %}
+            <form action="{% url 'toggle_favorite' product.id %}" method="post" class="sb-fav-form">
+              {% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.get_full_path }}">
+              <button type="submit" class="sb-fav-btn {% if product.id in favorite_product_ids %}sb-fav-active{% endif %}" aria-label="Ajouter aux favoris" aria-pressed="{% if product.id in favorite_product_ids %}true{% else %}false{% endif %}">
+                {% if product.id in favorite_product_ids %}♥{% else %}♡{% endif %}
+              </button>
+            </form>
+          </div>
+          <!-- Infos produit — zone à hauteur fixe pour aligner toutes les cartes entre elles -->
+          <div class="sb-product-body d-flex flex-column flex-grow-1">
+            <div class="sb-product-info flex-grow-1">
+              <p class="sb-product-name">{{ product.name }}</p>
+              <p class="sb-product-price">{{ product.price }} DT</p>
+            </div>
+            <div class="sb-product-footer">
+              <a href="{% url 'product_detail' product.id %}" class="sb-link-detail">
+                <i class="bi bi-eye me-1" style="font-size:11px;"></i>Voir détails
+              </a>
+              {% if product.stock > 0 %}
+              <a href="{% url 'cart_add' product.id %}" class="sb-cart-btn" title="Ajouter au panier">
+                <i class="bi bi-bag-plus"></i>
+              </a>
+              {% else %}
+              <span class="sb-cart-btn" style="opacity:.35;cursor:not-allowed;" title="Rupture de stock">
+                <i class="bi bi-bag-x"></i>
+              </span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center py-5" style="color:#6B7A8D;">
+        <i class="bi bi-bag-x" style="font-size:3rem;opacity:.3;display:block;margin-bottom:12px;"></i>
+        <p style="margin:0;">
+          {% if query %}Aucun résultat pour « {{ query }} ».{% else %}Aucun produit disponible pour le moment.{% endif %}
+        </p>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if products.paginator.num_pages > 1 %}
+    <nav class="mt-5 d-flex justify-content-center">
+      <ul class="pagination">
         {% if products.has_previous %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ products.previous_page_number }}">Précédent</a>
+          <a class="page-link" href="?page={{ products.previous_page_number }}">
+            <i class="bi bi-chevron-left"></i>
+          </a>
         </li>
         {% endif %}
-
-        {% for page_num in products.paginator.page_range %}
-        <li class="page-item {% if products.number == page_num %}active{% endif %}">
-            <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+        {% for p in products.paginator.page_range %}
+        <li class="page-item {% if products.number == p %}active{% endif %}">
+          <a class="page-link" href="?page={{ p }}">{{ p }}</a>
         </li>
         {% endfor %}
-
         {% if products.has_next %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ products.next_page_number }}">Suivant</a>
+          <a class="page-link" href="?page={{ products.next_page_number }}">
+            <i class="bi bi-chevron-right"></i>
+          </a>
         </li>
         {% endif %}
-    </ul>
-</nav>
-{% endif %}
+      </ul>
+    </nav>
+    {% endif %}
+
+  </div>
+</section>
+
+<!-- ========== À PROPOS ========== -->
+<section id="a-propos" style="background:#fff;overflow:hidden;">
+  <div style="display:grid;grid-template-columns:38% 1fr auto;min-height:340px;">
+
+    <!-- Image -->
+    <div style="overflow:hidden;">
+      {% with products.object_list|last as lp %}
+        {% if lp and lp.images.first %}
+          <img src="{{ lp.images.first.image.url }}" alt="Artisane au crochet"
+               style="width:100%;height:100%;object-fit:cover;object-position:center;">
+        {% else %}
+          <div style="width:100%;height:100%;min-height:340px;background:linear-gradient(135deg,#E8D5C4,#D9C4A0);display:flex;align-items:center;justify-content:center;">
+            <i class="bi bi-scissors" style="font-size:4rem;color:rgba(27,45,69,.15);"></i>
+          </div>
+        {% endif %}
+      {% endwith %}
+    </div>
+
+    <!-- Texte -->
+    <div style="padding:50px 52px;display:flex;flex-direction:column;justify-content:center;">
+      <p style="font-size:10.5px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#C9A96E;margin-bottom:12px;">À propos de StitchyBag</p>
+      <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:2rem;font-weight:600;line-height:1.18;margin:0 0 14px;color:#1B2D45;">
+        L'art du crochet,<br><em style="font-style:italic;color:#C9A96E;">notre passion</em>
+      </h2>
+      <p style="font-size:13.5px;color:#6B7A8D;line-height:1.72;max-width:400px;margin-bottom:26px;">
+        StitchyBag est une marque tunisienne dédiée à la création de sacs crochetés à la main.
+        Chaque pièce raconte une histoire de passion, de douceur et d'authenticité.
+      </p>
+      <a href="#"
+         style="display:inline-flex;align-items:center;gap:8px;background:#1B2D45;color:#fff;font-size:11.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:12px 24px;border-radius:50px;text-decoration:none;width:fit-content;">
+        En savoir plus <i class="bi bi-arrow-right"></i>
+      </a>
+    </div>
+
+    <!-- Valeurs -->
+    <div class="d-none d-lg-flex flex-column justify-content-center gap-4"
+         style="background:#FAF6F1;padding:40px 36px;border-left:1px solid #EDE0D0;min-width:270px;">
+      {% for icon,label,desc in ""|make_list %}{% endfor %}
+      <div class="d-flex gap-3 align-items-start">
+        <div style="width:36px;height:36px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#C9A96E;font-size:16px;flex-shrink:0;box-shadow:0 2px 8px rgba(27,45,69,.07);">
+          <i class="bi bi-heart"></i>
+        </div>
+        <div>
+          <strong style="font-size:13px;display:block;margin-bottom:3px;color:#1B2D45;">Passion</strong>
+          <span style="font-size:12px;color:#6B7A8D;line-height:1.5;">Chaque création est réalisée avec soin et passion.</span>
+        </div>
+      </div>
+      <div class="d-flex gap-3 align-items-start">
+        <div style="width:36px;height:36px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#C9A96E;font-size:16px;flex-shrink:0;box-shadow:0 2px 8px rgba(27,45,69,.07);">
+          <i class="bi bi-leaf"></i>
+        </div>
+        <div>
+          <strong style="font-size:13px;display:block;margin-bottom:3px;color:#1B2D45;">Authenticité</strong>
+          <span style="font-size:12px;color:#6B7A8D;line-height:1.5;">Des pièces uniques inspirées de la nature et du quotidien.</span>
+        </div>
+      </div>
+      <div class="d-flex gap-3 align-items-start">
+        <div style="width:36px;height:36px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#C9A96E;font-size:16px;flex-shrink:0;box-shadow:0 2px 8px rgba(27,45,69,.07);">
+          <i class="bi bi-gift"></i>
+        </div>
+        <div>
+          <strong style="font-size:13px;display:block;margin-bottom:3px;color:#1B2D45;">Engagement</strong>
+          <span style="font-size:12px;color:#6B7A8D;line-height:1.5;">Une production artisanale et responsable.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ========== FAQ ========== -->
+<section id="faq" style="background:#fff;padding:56px 0;">
+  <div class="container" style="max-width:760px;">
+    <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.8rem;font-weight:600;margin:0 0 28px;color:#1B2D45;text-align:center;">
+      Questions fréquentes
+    </h2>
+    <div class="accordion" id="sbFaqAccordion">
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+            Combien de temps prend la fabrication d'un sac ?
+          </button>
+        </h2>
+        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#sbFaqAccordion">
+          <div class="accordion-body" style="font-size:13.5px;color:#6B7A8D;">
+            Chaque pièce est crochetée à la main ; comptez en moyenne 3 à 8 jours selon le modèle.
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+            Quels modes de paiement acceptez-vous ?
+          </button>
+        </h2>
+        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#sbFaqAccordion">
+          <div class="accordion-body" style="font-size:13.5px;color:#6B7A8D;">
+            Le paiement à la livraison est disponible partout en Tunisie.
+          </div>
+        </div>
+      </div>
+     
+    </div>
+  </div>
+</section>
+
+<!-- ========== CONTACT ========== -->
+<section id="contact" style="background:#FAF6F1;padding:56px 0;">
+  <div class="container text-center" style="max-width:560px;">
+    <h2 style="font-family:'Cormorant Garamond',Georgia,serif;font-size:1.8rem;font-weight:600;margin:0 0 12px;color:#1B2D45;">
+      Une question ?
+    </h2>
+    <p style="font-size:13.5px;color:#6B7A8D;margin-bottom:24px;">
+      Notre équipe vous répond rapidement sur les réseaux sociaux.
+    </p>
+    <div class="d-flex justify-content-center gap-3">
+      <a href="https://www.instagram.com/stitchybag/" target="_blank" rel="noopener"
+         style="display:inline-flex;align-items:center;gap:8px;background:#1B2D45;color:#fff;font-size:13px;font-weight:600;padding:10px 20px;border-radius:50px;text-decoration:none;">
+        <i class="bi bi-instagram"></i> Instagram
+      </a>
+      <a href="https://www.facebook.com/profile.php?id=61569216085939" target="_blank" rel="noopener"
+         style="display:inline-flex;align-items:center;gap:8px;background:#fff;color:#1B2D45;border:1px solid #EDE0D0;font-size:13px;font-weight:600;padding:10px 20px;border-radius:50px;text-decoration:none;">
+        <i class="bi bi-facebook"></i> Facebook
+      </a>
+    </div>
+  </div>
+</section>
+
 {% endblock %}

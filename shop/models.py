@@ -41,6 +41,27 @@ class ProductImage(models.Model):
         return f"{self.product.name} Image"
 
 
+class HeroImage(models.Model):
+    title = models.CharField(max_length=200, blank=True)
+    image = models.ImageField(
+        upload_to='hero/',
+        storage=MediaCloudinaryStorage()
+    )
+    is_active = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-is_active', '-created_at']
+
+    def save(self, *args, **kwargs):
+        if self.is_active:
+            HeroImage.objects.filter(is_active=True).update(is_active=False)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title or f"Hero image {self.pk}"
+
+
 class OrderStatus(models.TextChoices):
     PENDING = "pending", "En attente"
     PREPARING = "preparing", "En préparation"
@@ -134,3 +155,25 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.order.reference}"
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='favorites'
+    )
+
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name='favorited_by'
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'product')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.product.name}"

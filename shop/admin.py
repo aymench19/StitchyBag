@@ -3,6 +3,7 @@ from django.utils.html import format_html
 from .models import (
     Product,
     ProductImage,
+    HeroImage,
     Order,
     OrderItem
 )
@@ -36,6 +37,13 @@ class OrderItemInline(admin.TabularInline):
         'quantity',
         'unit_price'
     )
+
+
+@admin.register(HeroImage)
+class HeroImageAdmin(admin.ModelAdmin):
+    list_display = ('title', 'is_active', 'created_at')
+    list_editable = ('is_active',)
+    list_filter = ('is_active',)
 
 
 @admin.register(Order)
