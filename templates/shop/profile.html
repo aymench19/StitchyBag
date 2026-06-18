@@ -35,6 +35,30 @@
   outline:none; transition:border-color .2s; background:#fff; color:var(--text);
 }
 .sb-card input[type=text]:focus,.sb-card input[type=email]:focus,.sb-card input[type=password]:focus { border-color:var(--gold); }
+
+.sb-btn-save {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .65rem;
+  width: 100%;
+  padding: 14px 18px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--gold), #f8d58f);
+  color: #13213A;
+  font-size: .95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  box-shadow: 0 14px 32px rgba(201,169,110,.22);
+  transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+}
+.sb-btn-save:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 34px rgba(201,169,110,.28);
+  filter: brightness(1.02);
+}
 </style>
 {% endblock %}
 
@@ -71,7 +95,7 @@
             {% endif %}
           </div>
           {% endfor %}
-          <button type="submit" class="sb-btn-gold w-100 justify-content-center mt-2">
+          <button type="submit" class="sb-btn-save w-100 justify-content-center mt-2">
             <i class="bi bi-check2"></i> Enregistrer
           </button>
         </form>

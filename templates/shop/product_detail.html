@@ -99,10 +99,8 @@
         </div>
 
         <div class="mb-3">
-          {% if product.stock > 5 %}
-          <span class="sb-stock sb-stock-ok"><i class="bi bi-check-circle-fill"></i>En stock ({{ product.stock }} disponibles)</span>
-          {% elif product.stock > 0 %}
-          <span class="sb-stock sb-stock-low"><i class="bi bi-exclamation-circle-fill"></i>Plus que {{ product.stock }} en stock !</span>
+          {% if product.stock > 0 %}
+          <span class="sb-stock sb-stock-ok"><i class="bi bi-check-circle-fill"></i>En stock </span>
           {% else %}
           <span class="sb-stock sb-stock-out"><i class="bi bi-x-circle-fill"></i>Rupture de stock</span>
           {% endif %}
@@ -136,14 +134,7 @@
           {% endif %}
         </div>
 
-        <div class="sb-divider"></div>
-
-        <div class="sb-guarantee">
-          <div class="sb-guarantee-item"><i class="bi bi-award"></i>Pièce unique faite main avec soin</div>
-          <div class="sb-guarantee-item"><i class="bi bi-truck"></i>Livraison soignée partout en Tunisie</div>
-          <div class="sb-guarantee-item"><i class="bi bi-shield-check"></i>Qualité garantie, matières sélectionnées</div>
-          <div class="sb-guarantee-item"><i class="bi bi-arrow-counterclockwise"></i>Retours acceptés sous 14 jours</div>
-        </div>
+        
       </div>
     </div>
 

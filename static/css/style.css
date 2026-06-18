@@ -90,6 +90,28 @@ body {
   cursor: pointer; font-size: 15px;
 }
 
+/* ── Navbar responsive tweaks ── */
+.navbar .container { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+.navbar-nav { gap: 0.5rem; }
+.navbar-collapse { justify-content: space-between; }
+@media (max-width: 991px) {
+  .navbar .container { padding-left: 0.75rem; padding-right: 0.75rem; }
+  .navbar-nav { width: 100%; justify-content: center; }
+  .navbar-nav .nav-item { width: 100%; }
+  .navbar-nav .nav-link { width: 100%; text-align: center; padding-left: 0; padding-right: 0; }
+  .sb-search-wrap { width: 100%; justify-content: center; }
+}
+@media (max-width: 767px) {
+  .navbar .container { padding-left: 0.75rem; padding-right: 0.75rem; }
+  .navbar-nav { flex-direction: column; align-items: stretch; }
+  .navbar-nav .nav-item { width: 100%; }
+  .navbar-nav .nav-link { width: 100%; text-align: center; padding: .75rem 0; }
+  .sb-search-wrap { width: 100%; justify-content: center; margin-top: .75rem; }
+  .sb-search-form.sb-search-open { max-width: 100%; }
+  .sb-search-form input { width: 100%; }
+  .sb-search-form { margin-left: 0; }
+}
+
 /* ── Status badges ── */
 .status-badge {
   display: inline-flex; align-items: center; gap: 5px;
