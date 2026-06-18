@@ -285,8 +285,20 @@ def dashboard(request):
         status='pending'
     ).count()
 
+    preparing_orders = Order.objects.filter(
+        status='preparing'
+    ).count()
+
+    ready_orders = Order.objects.filter(
+        status='ready'
+    ).count()
+
     delivered_orders = Order.objects.filter(
         status='delivered'
+    ).count()
+
+    canceled_orders = Order.objects.filter(
+        status='canceled'
     ).count()
 
     revenue = (
@@ -304,7 +316,10 @@ def dashboard(request):
         "total_products": total_products,
         "total_orders": total_orders,
         "pending_orders": pending_orders,
+        "preparing_orders": preparing_orders,
+        "ready_orders": ready_orders,
         "delivered_orders": delivered_orders,
+        "canceled_orders": canceled_orders,
         "revenue": revenue,
         "recent_orders": recent_orders,
     }

@@ -336,14 +336,6 @@
         <div class="dash-bar-group">
 
           <div class="dash-bar-row">
-            <span class="dash-bar-label">Livrées</span>
-            <div class="dash-bar-track">
-              <div class="dash-bar-fill" style="width:{% if total_orders > 0 %}{% widthratio delivered_orders total_orders 100 %}{% else %}0{% endif %}%;background:#4ade80;"></div>
-            </div>
-            <span class="dash-bar-val">{{ delivered_orders }}</span>
-          </div>
-
-          <div class="dash-bar-row">
             <span class="dash-bar-label">En attente</span>
             <div class="dash-bar-track">
               <div class="dash-bar-fill" style="width:{% if total_orders > 0 %}{% widthratio pending_orders total_orders 100 %}{% else %}0{% endif %}%;background:#fbbf24;"></div>
@@ -352,26 +344,38 @@
           </div>
 
           <div class="dash-bar-row">
-            <span class="dash-bar-label">Annulées</span>
+            <span class="dash-bar-label">En préparation</span>
             <div class="dash-bar-track">
-              <div class="dash-bar-fill" id="canceled-bar" style="background:#f87171;"></div>
+              <div class="dash-bar-fill" style="width:{% if total_orders > 0 %}{% widthratio preparing_orders total_orders 100 %}{% else %}0{% endif %}%;background:#60a5fa;"></div>
             </div>
-            <span class="dash-bar-val" id="canceled-val">—</span>
+            <span class="dash-bar-val">{{ preparing_orders }}</span>
+          </div>
+
+          <div class="dash-bar-row">
+            <span class="dash-bar-label">Préparée</span>
+            <div class="dash-bar-track">
+              <div class="dash-bar-fill" style="width:{% if total_orders > 0 %}{% widthratio ready_orders total_orders 100 %}{% else %}0{% endif %}%;background:#a78bfa;"></div>
+            </div>
+            <span class="dash-bar-val">{{ ready_orders }}</span>
+          </div>
+
+          <div class="dash-bar-row">
+            <span class="dash-bar-label">Livrées</span>
+            <div class="dash-bar-track">
+              <div class="dash-bar-fill" style="width:{% if total_orders > 0 %}{% widthratio delivered_orders total_orders 100 %}{% else %}0{% endif %}%;background:#4ade80;"></div>
+            </div>
+            <span class="dash-bar-val">{{ delivered_orders }}</span>
+          </div>
+
+          <div class="dash-bar-row">
+            <span class="dash-bar-label">Annulée</span>
+            <div class="dash-bar-track">
+              <div class="dash-bar-fill" style="width:{% if total_orders > 0 %}{% widthratio canceled_orders total_orders 100 %}{% else %}0{% endif %}%;background:#f87171;"></div>
+            </div>
+            <span class="dash-bar-val">{{ canceled_orders }}</span>
           </div>
 
         </div>
-
-        <script>
-        (function(){
-          var total = {{ total_orders }};
-          var delivered = {{ delivered_orders }};
-          var pending = {{ pending_orders }};
-          var canceled = Math.max(0, total - delivered - pending);
-          var pct = total > 0 ? Math.round(canceled / total * 100) : 0;
-          document.getElementById('canceled-bar').style.width = pct + '%';
-          document.getElementById('canceled-val').textContent = canceled;
-        })();
-        </script>
       </div>
 
       <!-- Quick actions -->
