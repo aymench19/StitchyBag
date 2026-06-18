@@ -1,59 +1,152 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block extra_head %}
+<style>
+.sb-detail-wrap { max-width:1180px; margin:0 auto; padding:48px 20px; }
+.sb-gallery-card { background:#fff; border-radius:20px; box-shadow:0 2px 24px rgba(27,45,69,.08); padding:16px; }
+.sb-gallery-main { border-radius:14px; overflow:hidden; background:#f4eadf; aspect-ratio:4/5; position:relative; cursor:zoom-in; }
+.sb-gallery-main img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .4s ease; }
+.sb-gallery-main:hover img { transform:scale(1.04); }
+.sb-gallery-thumb-row { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+.sb-thumb { width:68px; height:68px; border-radius:10px; object-fit:cover; cursor:pointer; border:2px solid transparent; transition:border-color .2s,opacity .2s; opacity:.6; }
+.sb-thumb.active,.sb-thumb:hover { border-color:var(--gold); opacity:1; }
+/* Product info */
+.sb-info-card { background:#fff; border-radius:20px; box-shadow:0 2px 24px rgba(27,45,69,.08); padding:36px; height:100%; }
+.sb-product-eyebrow { display:inline-flex; align-items:center; gap:7px; font-size:10.5px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin-bottom:14px; }
+.sb-product-title { font-family:'Cormorant Garamond',serif; font-size:2.4rem; font-weight:600; line-height:1.1; color:var(--navy); margin:0 0 16px; }
+.sb-desc { font-size:.92rem; line-height:1.9; color:var(--muted); margin-bottom:28px; }
+.sb-price-block { display:flex; align-items:baseline; gap:10px; margin-bottom:10px; }
+.sb-price { font-family:'Cormorant Garamond',serif; font-size:2.8rem; font-weight:600; color:var(--navy); }
+.sb-price-unit { font-size:.85rem; color:var(--muted); }
+.sb-stock { display:inline-flex; align-items:center; gap:6px; font-size:.8rem; font-weight:600; border-radius:50px; padding:5px 13px; margin-bottom:28px; }
+.sb-stock-ok { color:#1a6b3a; background:#e7f7ec; border:1px solid #86efac; }
+.sb-stock-low { color:#99630a; background:#fff2d9; border:1px solid #fde68a; }
+.sb-stock-out { color:#b91c1c; background:#fef2f2; border:1px solid #fecaca; }
+.sb-divider { height:1px; background:#f0ebe4; margin:28px 0; }
+.sb-action-group { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px; }
+.sb-btn-cta { display:inline-flex; align-items:center; justify-content:center; gap:9px; background:var(--navy); color:#fff; border:none; border-radius:10px; padding:15px 28px; font-size:.92rem; font-weight:600; cursor:pointer; text-decoration:none; font-family:inherit; transition:background .2s,transform .15s; }
+.sb-btn-cta:hover { background:#0D1A2E; color:#fff; transform:translateY(-1px); }
+.sb-btn-ghost { display:inline-flex; align-items:center; justify-content:center; gap:9px; background:transparent; color:var(--navy); border:1.5px solid #e2d9cf; border-radius:10px; padding:13px 22px; font-size:.88rem; font-weight:500; cursor:pointer; text-decoration:none; font-family:inherit; transition:border-color .2s,color .2s; }
+.sb-btn-ghost:hover { border-color:var(--gold); color:var(--gold); }
+.sb-btn-fav { display:inline-flex; align-items:center; gap:8px; border-radius:10px; padding:12px 18px; font-size:.85rem; font-weight:500; cursor:pointer; text-decoration:none; font-family:inherit; transition:all .2s; border:1.5px solid; }
+.sb-btn-fav-remove { background:#fef2f2; color:#b91c1c; border-color:#fecaca; }
+.sb-btn-fav-remove:hover { background:#fee2e2; border-color:#b91c1c; color:#b91c1c; }
+.sb-btn-fav-add { background:#fffbea; color:#92400e; border-color:#fde68a; }
+.sb-btn-fav-add:hover { background:#fef3c7; color:#92400e; }
+.sb-guarantee { display:flex; flex-direction:column; gap:13px; }
+.sb-guarantee-item { display:flex; align-items:center; gap:13px; font-size:.85rem; color:var(--muted); }
+.sb-guarantee-item i { font-size:1.15rem; color:var(--gold); flex-shrink:0; width:20px; text-align:center; }
+/* Breadcrumb */
+.sb-breadcrumb { display:flex; align-items:center; gap:8px; font-size:.78rem; color:var(--muted); margin-bottom:28px; flex-wrap:wrap; }
+.sb-breadcrumb a { color:var(--muted); text-decoration:none; transition:color .2s; }
+.sb-breadcrumb a:hover { color:var(--gold); }
+.sb-breadcrumb-sep { color:#d0c8be; }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="row g-4 align-items-start">
-    <div class="col-lg-7">
-        <div class="detail-card">
-            <div id="carouselExample" class="carousel slide">
-                <div class="carousel-inner">
-                    {% for image in product.images.all %}
-                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                        <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ product.name }}">
-                    </div>
-                    {% empty %}
-                    <div class="carousel-item active">
-                        <div class="d-flex align-items-center justify-content-center text-muted" style="height: 480px; background: #f4eadf;">
-                            Aucune image disponible pour ce produit
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"></span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span>
-                </button>
-            </div>
+<div class="sb-detail-wrap">
+
+  <!-- Breadcrumb -->
+  <div class="sb-breadcrumb">
+    <a href="{% url 'home' %}"><i class="bi bi-house me-1"></i>Accueil</a>
+    <span class="sb-breadcrumb-sep">/</span>
+    <a href="{% url 'home' %}#collection">Boutique</a>
+    <span class="sb-breadcrumb-sep">/</span>
+    <span style="color:var(--text);">{{ product.name }}</span>
+  </div>
+
+  <div class="row g-5 align-items-start">
+
+    <!-- Gallery -->
+    <div class="col-lg-6">
+      <div class="sb-gallery-card">
+        {% if product.images.all %}
+        <div class="sb-gallery-main" id="mainImgWrap">
+          <img src="{{ product.images.all.0.image.url }}" alt="{{ product.name }}" id="mainImg">
         </div>
+        {% if product.images.all|length > 1 %}
+        <div class="sb-gallery-thumb-row">
+          {% for image in product.images.all %}
+          <img src="{{ image.image.url }}"
+               class="sb-thumb {% if forloop.first %}active{% endif %}"
+               alt=""
+               onclick="document.getElementById('mainImg').src=this.src;document.querySelectorAll('.sb-thumb').forEach(t=>t.classList.remove('active'));this.classList.add('active');">
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% else %}
+        <div class="sb-gallery-main d-flex align-items-center justify-content-center" style="color:rgba(27,45,69,.2);">
+          <i class="bi bi-image" style="font-size:4rem;"></i>
+        </div>
+        {% endif %}
+      </div>
     </div>
 
-    <div class="col-lg-5">
-        <div class="detail-card">
-            <span class="eyebrow">Collection artisanale</span>
-            <h2 class="fw-bold mb-3">{{ product.name }}</h2>
-            <p class="text-muted">{{ product.description }}</p>
-            <div class="price-pill">{{ product.price }} DT</div>
-            <div class="stock-pill">Stock disponible : {{ product.stock }}</div>
-
-            <div class="detail-actions">
-                <a href="{% url 'cart_add' product.id %}" class="btn btn-dark btn-lg">Ajouter au panier</a>
-                <a href="{% url 'cart' %}" class="btn btn-outline-dark btn-lg">Voir le panier</a>
-                
-            </div>
-
-            <div class="mt-4 border-top pt-3">
-                <div class="d-flex align-items-center gap-2 mb-2">
-                    <i class="bi bi-star-fill text-warning"></i>
-                    <span>Produit handmade de haute qualité</span>
-                </div>
-                <div class="d-flex align-items-center gap-2 mb-2">
-                    <i class="bi bi-truck text-warning"></i>
-                    <span>Livraison soignée partout</span>
-                </div>
-                
-            </div>
+    <!-- Product info -->
+    <div class="col-lg-6">
+      <div class="sb-info-card">
+        <div class="sb-product-eyebrow">
+          <i class="bi bi-scissors"></i> Collection artisanale
         </div>
+        <h1 class="sb-product-title">{{ product.name }}</h1>
+        <p class="sb-desc">{{ product.description }}</p>
+
+        <div class="sb-price-block">
+          <span class="sb-price">{{ product.price }}</span>
+          <span class="sb-price-unit">DT</span>
+        </div>
+
+        <div class="mb-3">
+          {% if product.stock > 5 %}
+          <span class="sb-stock sb-stock-ok"><i class="bi bi-check-circle-fill"></i>En stock ({{ product.stock }} disponibles)</span>
+          {% elif product.stock > 0 %}
+          <span class="sb-stock sb-stock-low"><i class="bi bi-exclamation-circle-fill"></i>Plus que {{ product.stock }} en stock !</span>
+          {% else %}
+          <span class="sb-stock sb-stock-out"><i class="bi bi-x-circle-fill"></i>Rupture de stock</span>
+          {% endif %}
+        </div>
+
+        <div class="sb-action-group">
+          {% if product.stock > 0 %}
+          <a href="{% url 'cart_add' product.id %}" class="sb-btn-cta">
+            <i class="bi bi-bag-plus"></i> Ajouter au panier
+          </a>
+          {% endif %}
+          <a href="{% url 'cart' %}" class="sb-btn-ghost">
+            <i class="bi bi-bag"></i> Voir le panier
+          </a>
+        </div>
+
+        <div class="mb-4">
+          {% if user.is_authenticated %}
+          <form action="{% url 'toggle_favorite' product.id %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            {% if is_favorite %}
+            <button class="sb-btn-fav sb-btn-fav-remove"><i class="bi bi-heart-fill"></i> Retirer des favoris</button>
+            {% else %}
+            <button class="sb-btn-fav sb-btn-fav-add"><i class="bi bi-heart"></i> Ajouter aux favoris</button>
+            {% endif %}
+          </form>
+          {% else %}
+          <a href="{% url 'login' %}?next={% url 'product_detail' product.id %}" class="sb-btn-fav sb-btn-fav-add">
+            <i class="bi bi-heart"></i> Connexion pour ajouter aux favoris
+          </a>
+          {% endif %}
+        </div>
+
+        <div class="sb-divider"></div>
+
+        <div class="sb-guarantee">
+          <div class="sb-guarantee-item"><i class="bi bi-award"></i>Pièce unique faite main avec soin</div>
+          <div class="sb-guarantee-item"><i class="bi bi-truck"></i>Livraison soignée partout en Tunisie</div>
+          <div class="sb-guarantee-item"><i class="bi bi-shield-check"></i>Qualité garantie, matières sélectionnées</div>
+          <div class="sb-guarantee-item"><i class="bi bi-arrow-counterclockwise"></i>Retours acceptés sous 14 jours</div>
+        </div>
+      </div>
     </div>
+
+  </div>
 </div>
 {% endblock %}

@@ -1,29 +1,105 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block extra_head %}
+<style>
+.sb-info-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:20px; }
+.sb-info-item { display:flex; flex-direction:column; gap:4px; }
+.sb-info-key { font-size:.72rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+.sb-info-val { font-size:.95rem; font-weight:600; color:var(--navy); }
+.sb-items-table { width:100%; border-collapse:collapse; }
+.sb-items-table th { font-size:.7rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); padding:0 0 14px; border-bottom:2px solid #f0ebe4; text-align:left; }
+.sb-items-table th:last-child { text-align:right; }
+.sb-items-table td { padding:16px 0; border-bottom:1px solid #f5f0ea; font-size:.9rem; vertical-align:middle; }
+.sb-items-table td:last-child { text-align:right; font-weight:700; }
+.sb-items-table tr:last-child td { border-bottom:none; }
+.sb-product-thumb { width:52px; height:52px; border-radius:10px; object-fit:cover; margin-right:14px; vertical-align:middle; }
+.sb-total-row { display:flex; justify-content:flex-end; align-items:center; gap:20px; padding-top:18px; margin-top:4px; border-top:2px solid #f0ebe4; }
+.sb-total-label { font-size:.88rem; color:var(--muted); }
+.sb-total-val { font-family:'Cormorant Garamond',serif; font-size:1.9rem; font-weight:600; color:var(--gold); }
+</style>
+{% endblock %}
 
 {% block content %}
 
-<h2>📄 Commande {{ order.reference }}</h2>
+<div class="sb-page-header">
+  <div class="container">
+    <span class="sb-eyebrow"><i class="bi bi-receipt me-1"></i>Détail commande</span>
+    <h1>{{ order.reference }}</h1>
+    <p>Détail et statut de votre commande</p>
+  </div>
+</div>
 
-<p><strong>Client:</strong> {{ order.first_name }} {{ order.last_name }}</p>
-<p><strong>Statut:</strong> {{ order.get_status_display }}</p>
-<p><strong>Total:</strong> {{ order.total_price }} DT</p>
+<div class="container py-5" style="max-width:900px;">
 
-<hr>
+  <a href="{% url 'my_orders' %}" class="sb-btn-outline mb-4 d-inline-flex">
+    <i class="bi bi-arrow-left"></i> Retour aux commandes
+  </a>
 
-<h4>Produits</h4>
+  <!-- Informations générales -->
+  <div class="sb-card mb-4">
+    <div class="sb-section-label"><i class="bi bi-info-circle"></i>Informations générales</div>
+    <div class="sb-info-grid">
+      <div class="sb-info-item">
+        <span class="sb-info-key">Client</span>
+        <span class="sb-info-val">{{ order.first_name }} {{ order.last_name }}</span>
+      </div>
+      <div class="sb-info-item">
+        <span class="sb-info-key">Référence</span>
+        <span class="sb-info-val" style="font-family:'Cormorant Garamond',serif;">{{ order.reference }}</span>
+      </div>
+      <div class="sb-info-item">
+        <span class="sb-info-key">Date</span>
+        <span class="sb-info-val">{{ order.created_at|date:"d M Y" }}</span>
+      </div>
+      <div class="sb-info-item">
+        <span class="sb-info-key">Statut</span>
+        <span class="sb-info-val">
+          {% if order.status == "pending" %}
+          <span class="status-badge status-pending"><i class="bi bi-clock me-1"></i>{{ order.get_status_display }}</span>
+          {% elif order.status == "delivered" %}
+          <span class="status-badge status-delivered"><i class="bi bi-check-circle me-1"></i>{{ order.get_status_display }}</span>
+          {% else %}
+          <span class="status-badge status-canceled"><i class="bi bi-x-circle me-1"></i>{{ order.get_status_display }}</span>
+          {% endif %}
+        </span>
+      </div>
+    </div>
+  </div>
 
-<table class="table">
+  <!-- Produits -->
+  <div class="sb-card">
+    <div class="sb-section-label"><i class="bi bi-bag"></i>Produits commandés</div>
+    <table class="sb-items-table">
+      <thead>
+        <tr>
+          <th>Produit</th>
+          <th style="text-align:center;">Qté</th>
+          <th>Prix unitaire</th>
+          <th>Sous-total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in order.items.all %}
+        <tr>
+          <td>
+            {% if item.product.images.first %}
+            <img src="{{ item.product.images.first.image.url }}" class="sb-product-thumb" alt="">
+            {% endif %}
+            <span style="font-weight:600;">{{ item.product.name }}</span>
+          </td>
+          <td style="text-align:center;color:var(--muted);">{{ item.quantity }}</td>
+          <td>{{ item.unit_price }} DT</td>
+          <td>{% widthratio item.unit_price 1 item.quantity %} DT</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="sb-total-row">
+      <span class="sb-total-label">Total commande</span>
+      <span class="sb-total-val">{{ order.total_price }} DT</span>
+    </div>
+  </div>
 
-{% for item in order.items.all %}
-
-<tr>
-<td>{{ item.product.name }}</td>
-<td>{{ item.quantity }}</td>
-<td>{{ item.unit_price }} DT</td>
-</tr>
-
-{% endfor %}
-
-</table>
-
+</div>
 {% endblock %}

@@ -9,45 +9,29 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=2">
-    <style>
-      .pagination .page-item.active > .page-link,
-      .pagination .page-item.active > .page-link:hover,
-      .pagination .page-item.active > .page-link:focus,
-      .active > .page-link,
-      .page-link.active {
-        background-color: #172a43 !important;
-        border-color: #172a43 !important;
-        color: #fff !important;
-        font-weight: 700 !important;
-        box-shadow: none !important;
-      }
-      .pagination .page-item.active > .page-link {
-        pointer-events: none !important;
-      }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
 <body>
 
 <!-- ===== TOPBAR ===== -->
-<div style="background:#13213A;color:rgba(255,255,255,.8);font-size:12px;padding:7px 0;">
+<div style="background:#13213A;color:rgba(255,255,255,.75);font-size:11.5px;padding:7px 0;">
   <div class="container">
     <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
       <span><i class="bi bi-truck me-1"></i>Livraison offerte à partir de 100 DT</span>
       <div class="d-flex align-items-center gap-3">
         <span class="d-none d-md-flex align-items-center gap-1">
           <i class="bi bi-box-seam"></i>
-          <a href="{% url 'my_orders' %}" style="color:rgba(255,255,255,.8);text-decoration:none;">Suivi de commande</a>
+          <a href="{% url 'my_orders' %}" style="color:rgba(255,255,255,.75);text-decoration:none;">Suivi de commande</a>
         </span>
         <span class="d-none d-md-flex align-items-center gap-1">
           <i class="bi bi-question-circle"></i>
-          <a href="{% url 'home' %}#faq" style="color:rgba(255,255,255,.8);text-decoration:none;">Aide &amp; FAQ</a>
+          <a href="{% url 'home' %}#faq" style="color:rgba(255,255,255,.75);text-decoration:none;">Aide &amp; FAQ</a>
         </span>
         <div class="d-flex gap-2">
-          <a href="https://www.instagram.com/stitchybag/" target="_blank" rel="noopener" style="color:rgba(255,255,255,.8);"><i class="bi bi-instagram"></i></a>
-          <a href="https://www.facebook.com/profile.php?id=61569216085939" target="_blank" rel="noopener" style="color:rgba(255,255,255,.8);"><i class="bi bi-facebook"></i></a>
-          <a href="https://www.tiktok.com/@crochet_by_hanen" target="_blank" rel="noopener" style="color:rgba(255,255,255,.8);"><i class="bi bi-tiktok"></i></a>
+          <a href="https://www.instagram.com/stitchybag/" target="_blank" rel="noopener" style="color:rgba(255,255,255,.75);"><i class="bi bi-instagram"></i></a>
+          <a href="https://www.facebook.com/profile.php?id=61569216085939" target="_blank" rel="noopener" style="color:rgba(255,255,255,.75);"><i class="bi bi-facebook"></i></a>
+          <a href="https://www.tiktok.com/@crochet_by_hanen" target="_blank" rel="noopener" style="color:rgba(255,255,255,.75);"><i class="bi bi-tiktok"></i></a>
         </div>
       </div>
     </div>
@@ -55,78 +39,110 @@
 </div>
 
 <!-- ===== NAVBAR ===== -->
-<nav class="navbar navbar-expand-lg navbar-light sticky-top" style="background:#fff;border-bottom:1px solid #eee;box-shadow:0 2px 12px rgba(27,45,69,.06);padding:0;">
-  <div class="container">
+<nav class="navbar navbar-expand-lg sticky-top" style="background:#fff;border-bottom:1px solid rgba(27,45,69,.08);box-shadow:0 2px 16px rgba(27,45,69,.06);padding:0;">
+  <div class="container" style="height:68px;">
+
     <a class="navbar-brand p-0" href="{% url 'home' %}">
-      <img src="{% static 'images/logo.png' %}" alt="StitchyBag" style="height:60px;width:auto;">
+      <img src="{% static 'images/logo.png' %}" alt="StitchyBag" style="height:58px;width:auto;">
     </a>
-    <button class="navbar-toggler border-0 shadow-none ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-label="Menu" aria-controls="mainNav" aria-expanded="false">
+
+    <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-label="Menu">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="mainNav">
-      <ul class="navbar-nav mx-auto gap-1">
-        <li class="nav-item">
-          <a class="nav-link sb-navlink {% if request.path == '/' and not query %}sb-navlink-active{% endif %}" href="{% url 'home' %}">Accueil</a>
+      <!-- Nav links — active state based on current URL -->
+      <ul class="navbar-nav mx-auto" style="height:68px;gap:4px;">
+
+        <li class="nav-item d-flex align-items-center">
+          <a class="nav-link sb-navlink {% if request.resolver_match.url_name == 'home' and not request.GET.sort and not request.GET.q %}sb-navlink-active{% endif %}"
+             href="{% url 'home' %}">Accueil</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link sb-navlink" href="{% url 'home' %}#collection">Boutique</a>
+
+        <li class="nav-item d-flex align-items-center">
+          <a class="nav-link sb-navlink {% if request.GET.q %}sb-navlink-active{% endif %}"
+             href="{% url 'home' %}#collection">Boutique</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link sb-navlink {% if sort == 'new' %}sb-navlink-active{% endif %}" href="{% url 'home' %}?sort=new#collection">Nouveautés</a>
+
+        <li class="nav-item d-flex align-items-center">
+          <a class="nav-link sb-navlink {% if request.GET.sort == 'new' %}sb-navlink-active{% endif %}"
+             href="{% url 'home' %}?sort=new#collection">Nouveautés</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link sb-navlink" href="{% url 'home' %}#a-propos">À propos</a>
+
+        <li class="nav-item d-flex align-items-center">
+          <a class="nav-link sb-navlink {% if request.resolver_match.url_name == 'home' and '#a-propos' in request.path %}sb-navlink-active{% endif %}"
+             href="{% url 'home' %}#a-propos">À propos</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link sb-navlink" href="{% url 'home' %}#contact">Contact</a>
+
+        <li class="nav-item d-flex align-items-center">
+          <a class="nav-link sb-navlink"
+             href="{% url 'home' %}#contact">Contact</a>
         </li>
+
       </ul>
-      <div class="d-flex align-items-center gap-3 flex-wrap ms-lg-3">
-        <!-- Recherche -->
+
+      <!-- Right icons -->
+      <div class="d-flex align-items-center gap-3 ms-lg-2">
+
+        <!-- Search -->
         <div class="sb-search-wrap">
-          <button type="button" id="sbSearchToggle" title="Rechercher" style="background:none;border:none;color:#1B2D45;font-size:18px;cursor:pointer;padding:0;">
+          <button type="button" id="sbSearchToggle" title="Rechercher"
+                  style="background:none;border:none;color:var(--navy);font-size:18px;cursor:pointer;padding:0;transition:color .2s;"
+                  onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--navy)'">
             <i class="bi bi-search"></i>
           </button>
           <form method="get" action="{% url 'home' %}#collection" id="sbSearchForm" class="sb-search-form">
-            <input type="text" name="q" placeholder="Rechercher un sac…" value="{{ query|default:'' }}" autocomplete="off">
+            <input type="text" name="q" placeholder="Rechercher…" value="{{ query|default:'' }}" autocomplete="off">
             <button type="submit" aria-label="Lancer la recherche"><i class="bi bi-arrow-right"></i></button>
           </form>
         </div>
-        <!-- Compte -->
+
+        <!-- Account -->
         {% if user.is_authenticated %}
-        <a href="{% url 'profile' %}" title="{{ user.username }}" style="color:#1B2D45;font-size:18px;text-decoration:none;">
+        <a href="{% url 'profile' %}" title="{{ user.username }}" class="sb-nav-icon" style="font-size:18px;">
           <i class="bi bi-person-check"></i>
         </a>
         {% else %}
-        <a href="{% url 'login' %}" title="Connexion" style="color:#1B2D45;font-size:18px;text-decoration:none;">
+        <a href="{% url 'login' %}" title="Connexion" class="sb-nav-icon" style="font-size:18px;">
           <i class="bi bi-person"></i>
         </a>
         {% endif %}
-        <!-- Panier -->
-        <a href="{% url 'cart' %}" title="Panier" style="color:#1B2D45;font-size:18px;text-decoration:none;position:relative;">
+
+        <!-- Cart -->
+        <a href="{% url 'cart' %}" title="Panier" class="sb-nav-icon" style="font-size:18px;position:relative;">
           <i class="bi bi-bag"></i>
           {% if cart_count > 0 %}
-          <span style="position:absolute;top:-7px;right:-9px;background:#C9A96E;color:#fff;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0 2px;">{{ cart_count }}</span>
+          <span style="position:absolute;top:-7px;right:-9px;background:var(--gold);color:#fff;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0 2px;">{{ cart_count }}</span>
           {% endif %}
         </a>
-        <!-- Déconnexion rapide si connecté -->
+
+        <!-- Logout / Signup -->
         {% if user.is_authenticated %}
         <form method="post" action="{% url 'logout' %}" class="d-none d-lg-block m-0">
           {% csrf_token %}
-          <button type="submit" style="background:none;border:1px solid #ddd;border-radius:50px;padding:5px 14px;font-size:12px;color:#6B7A8D;cursor:pointer;font-family:inherit;" title="Se déconnecter">
+          <button type="submit"
+                  style="background:none;border:1px solid rgba(27,45,69,.15);border-radius:50px;padding:5px 14px;font-size:12px;color:var(--muted);cursor:pointer;font-family:inherit;transition:border-color .2s,color .2s;"
+                  onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)';"
+                  onmouseout="this.style.borderColor='rgba(27,45,69,.15)';this.style.color='var(--muted)';">
             <i class="bi bi-box-arrow-right"></i>
           </button>
         </form>
         {% else %}
-        <a href="{% url 'signup' %}" style="background:#1B2D45;color:#fff;border-radius:50px;padding:6px 16px;font-size:12px;font-weight:600;text-decoration:none;" class="d-none d-lg-block">
+        <a href="{% url 'signup' %}"
+           style="background:var(--navy);color:#fff;border-radius:50px;padding:7px 18px;font-size:12px;font-weight:600;text-decoration:none;letter-spacing:.04em;transition:background .2s;"
+           class="d-none d-lg-block"
+           onmouseover="this.style.background='#0D1A2E'" onmouseout="this.style.background='var(--navy)'">
           Créer un compte
         </a>
         {% endif %}
+
         {% if user.is_authenticated and user.is_staff %}
-        <a href="{% url 'dashboard' %}" style="background:#C9A96E;color:#fff;border-radius:50px;padding:6px 14px;font-size:12px;font-weight:600;text-decoration:none;">
+        <a href="{% url 'dashboard' %}"
+           style="background:var(--gold);color:#13213A;border-radius:50px;padding:7px 16px;font-size:12px;font-weight:700;text-decoration:none;letter-spacing:.03em;">
           📊 Dashboard
         </a>
         {% endif %}
+
       </div>
     </div>
   </div>
@@ -144,26 +160,22 @@
 </div>
 {% endif %}
 
-<!-- ===== CONTENU ===== -->
+<!-- ===== CONTENT ===== -->
 <main>{% block content %}{% endblock %}</main>
 
 <!-- ===== FOOTER ===== -->
 <footer style="background:#13213A;color:rgba(255,255,255,.7);padding:52px 0 0;margin-top:0;">
   <div class="container">
     <div class="row g-4">
-
-      <!-- Brand -->
       <div class="col-lg-3 col-sm-6">
-        <img src="{% static 'images/logo.png' %}" alt="StitchyBag" style="height:60px;width:auto;margin-bottom:14px;">
-        <p style="font-size:13px;line-height:1.65;color:rgba(255,255,255,.5);">Des sacs crochetés à la main pour un style unique et intemporel.</p>
+        <img src="{% static 'images/logo.png' %}" alt="StitchyBag" style="height:58px;width:auto;margin-bottom:14px;">
+        <p style="font-size:13px;line-height:1.65;color:rgba(255,255,255,.45);">Des sacs crochetés à la main pour un style unique et intemporel.</p>
         <div class="d-flex gap-2 mt-3">
           <a href="https://www.instagram.com/stitchybag/" target="_blank" rel="noopener" class="sb-social-icon"><i class="bi bi-instagram"></i></a>
           <a href="https://www.facebook.com/profile.php?id=61569216085939" target="_blank" rel="noopener" class="sb-social-icon"><i class="bi bi-facebook"></i></a>
           <a href="https://www.tiktok.com/@crochet_by_hanen" target="_blank" rel="noopener" class="sb-social-icon"><i class="bi bi-tiktok"></i></a>
         </div>
       </div>
-
-      <!-- Boutique -->
       <div class="col-lg-2 col-sm-6 col-6">
         <h6 class="sb-footer-heading">Boutique</h6>
         <ul class="sb-footer-links">
@@ -173,8 +185,6 @@
           <li><a href="{% url 'home' %}?sort=price_desc#collection">Prix décroissant</a></li>
         </ul>
       </div>
-
-      <!-- Informations -->
       <div class="col-lg-2 col-sm-6 col-6">
         <h6 class="sb-footer-heading">Informations</h6>
         <ul class="sb-footer-links">
@@ -183,8 +193,6 @@
           <li><a href="{% url 'home' %}#contact">Contact</a></li>
         </ul>
       </div>
-
-      <!-- Mon compte -->
       <div class="col-lg-2 col-sm-6 col-6">
         <h6 class="sb-footer-heading">Mon compte</h6>
         <ul class="sb-footer-links">
@@ -194,30 +202,22 @@
           <li>
             <form method="post" action="{% url 'logout' %}" style="display:inline;">
               {% csrf_token %}
-              <button type="submit" style="background:none;border:none;color:rgba(255,255,255,.5);font-size:13px;padding:0;cursor:pointer;font-family:inherit;">
-                Se déconnecter
-              </button>
+              <button type="submit" style="background:none;border:none;color:rgba(255,255,255,.5);font-size:13px;padding:0;cursor:pointer;font-family:inherit;">Se déconnecter</button>
             </form>
           </li>
           {% else %}
           <li><a href="{% url 'login' %}">Connexion</a></li>
           <li><a href="{% url 'signup' %}">Créer un compte</a></li>
           <li><a href="{% url 'my_orders' %}">Mes commandes</a></li>
-          <li><span style="font-size:13px;color:rgba(255,255,255,.3);cursor:default;" title="Fonctionnalité à venir">Mes favoris</span></li>
           {% endif %}
         </ul>
       </div>
-
-      
-
     </div>
-
-    <!-- Barre du bas -->
     <div style="border-top:1px solid rgba(255,255,255,.08);margin-top:40px;padding:16px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-size:12px;color:rgba(255,255,255,.3);">
       <span>© 2024 StitchyBag – Tous droits réservés</span>
       <div class="d-flex gap-3">
-        <span style="color:rgba(255,255,255,.3);cursor:default;" title="Page à venir">Mentions légales</span>
-        <span style="color:rgba(255,255,255,.3);cursor:default;" title="Page à venir">Politique de confidentialité</span>
+        <span style="cursor:default;" title="Page à venir">Mentions légales</span>
+        <span style="cursor:default;" title="Page à venir">Politique de confidentialité</span>
       </div>
     </div>
   </div>
@@ -225,32 +225,28 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  // Toggle du champ de recherche dans la navbar
-  (function () {
-    var toggle = document.getElementById('sbSearchToggle');
-    var form = document.getElementById('sbSearchForm');
-    if (toggle && form) {
-      toggle.addEventListener('click', function () {
-        form.classList.toggle('sb-search-open');
-        if (form.classList.contains('sb-search-open')) {
-          form.querySelector('input').focus();
-        }
-      });
-    }
-  })();
-
-  // Feedback visuel sur l'inscription newsletter (pas de backend dédié)
-  (function () {
-    var form = document.getElementById('sbNewsletterForm');
-    var msg = document.getElementById('sbNewsletterMsg');
-    if (form && msg) {
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        msg.style.display = 'block';
-        form.reset();
-      });
-    }
-  })();
+(function () {
+  var toggle = document.getElementById('sbSearchToggle');
+  var form = document.getElementById('sbSearchForm');
+  if (toggle && form) {
+    toggle.addEventListener('click', function () {
+      form.classList.toggle('sb-search-open');
+      if (form.classList.contains('sb-search-open')) form.querySelector('input').focus();
+    });
+    document.addEventListener('click', function(e) {
+      if (!toggle.contains(e.target) && !form.contains(e.target)) {
+        form.classList.remove('sb-search-open');
+      }
+    });
+  }
+})();
+(function () {
+  var form = document.getElementById('sbNewsletterForm');
+  var msg = document.getElementById('sbNewsletterMsg');
+  if (form && msg) {
+    form.addEventListener('submit', function (e) { e.preventDefault(); msg.style.display = 'block'; form.reset(); });
+  }
+})();
 </script>
 </body>
 </html>

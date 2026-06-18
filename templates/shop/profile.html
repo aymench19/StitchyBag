@@ -1,77 +1,144 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block extra_head %}
+<style>
+.sb-profile-header { background:linear-gradient(135deg,#13213A 0%,#1B2D45 100%); color:#fff; padding:52px 0 44px; position:relative; overflow:hidden; }
+.sb-profile-header::before { content:''; position:absolute; inset:0; background-image:repeating-linear-gradient(45deg,transparent,transparent 24px,rgba(255,255,255,.018) 24px,rgba(255,255,255,.018) 25px),repeating-linear-gradient(-45deg,transparent,transparent 24px,rgba(255,255,255,.018) 24px,rgba(255,255,255,.018) 25px); pointer-events:none; }
+.sb-profile-header::after { content:''; position:absolute; top:-40%; right:-5%; width:400px; height:400px; background:radial-gradient(circle,rgba(201,169,110,.12) 0%,transparent 65%); pointer-events:none; }
+.sb-profile-header > * { position:relative; z-index:1; }
+.sb-avatar-lg { width:80px; height:80px; border-radius:50%; background:var(--gold); display:flex; align-items:center; justify-content:center; font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:600; color:#13213A; flex-shrink:0; box-shadow:0 4px 20px rgba(201,169,110,.35); border:3px solid rgba(255,255,255,.15); }
+.sb-profile-name { font-family:'Cormorant Garamond',serif; font-size:1.9rem; font-weight:600; margin:0 0 4px; }
+.sb-profile-email { color:rgba(255,255,255,.5); font-size:.88rem; margin:0; }
+.sb-field-label { font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; display:block; }
+.sb-order-row { display:flex; justify-content:space-between; align-items:center; padding:14px 0; border-bottom:1px solid #f0ebe4; transition:background .1s; }
+.sb-order-row:last-of-type { border-bottom:none; }
+.sb-order-ref { font-weight:600; font-size:.9rem; color:var(--navy); text-decoration:none; transition:color .2s; }
+.sb-order-ref:hover { color:var(--gold); }
+.sb-order-price { font-weight:700; font-size:.95rem; color:var(--navy); }
+.sb-fav-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(148px,1fr)); gap:14px; }
+.sb-fav-card { border-radius:12px; overflow:hidden; background:#fff; border:1px solid #f0ebe4; transition:box-shadow .2s,transform .2s; }
+.sb-fav-card:hover { box-shadow:0 8px 24px rgba(27,45,69,.1); transform:translateY(-2px); }
+.sb-fav-img { height:128px; width:100%; object-fit:cover; }
+.sb-fav-body { padding:10px 12px; }
+.sb-fav-name { font-size:.82rem; font-weight:600; margin:0 0 3px; color:var(--navy); }
+.sb-fav-price { font-size:.78rem; color:var(--muted); }
+.sb-fav-actions { display:flex; gap:6px; padding:0 12px 10px; }
+.sb-btn-fav { display:inline-flex; align-items:center; gap:6px; background:#fef2f2; color:#b91c1c; border:1.5px solid #fecaca; border-radius:7px; padding:6px 10px; font-size:.76rem; font-weight:500; cursor:pointer; text-decoration:none; font-family:inherit; transition:all .2s; }
+.sb-btn-fav:hover { border-color:#b91c1c; }
+.sb-empty-sm { text-align:center; padding:32px 16px; color:var(--muted); font-size:.88rem; }
+.sb-empty-sm i { font-size:1.8rem; display:block; margin-bottom:10px; opacity:.3; }
+/* Form field styling */
+.sb-card input[type=text],.sb-card input[type=email],.sb-card input[type=password] {
+  width:100%; border:1.5px solid #e2d9cf; border-radius:8px;
+  padding:10px 14px; font-size:.9rem; font-family:inherit;
+  outline:none; transition:border-color .2s; background:#fff; color:var(--text);
+}
+.sb-card input[type=text]:focus,.sb-card input[type=email]:focus,.sb-card input[type=password]:focus { border-color:var(--gold); }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <div class="row">
-        <div class="col-lg-4">
-            <div class="card p-4 mb-4">
-                <h2 class="h4 mb-3">Mes informations</h2>
-                <form method="post" novalidate>
-                    {% csrf_token %}
-                    {% for field in form %}
-                    <div class="mb-3">
-                        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                        {{ field }}
-                        {% if field.errors %}
-                        <div class="text-danger small">{{ field.errors|striptags }}</div>
-                        {% endif %}
-                    </div>
-                    {% endfor %}
-                    <button type="submit" class="btn btn-dark">Mettre à jour</button>
-                </form>
-            </div>
-        </div>
 
-        <div class="col-lg-8">
-            <section class="mb-4">
-                <h4>Mes commandes</h4>
-                {% if orders %}
-                    <ul class="list-group">
-                        {% for order in orders %}
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <a href="{% url 'order_detail' order.id %}">{{ order.reference }}</a>
-                                <span>{{ order.total_price }} DT</span>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p>Vous n'avez pas encore passé de commande.</p>
-                {% endif %}
-            </section>
-
-            <section class="mt-4">
-                <h4>Mes favoris</h4>
-                {% if favorites %}
-                    <div class="row g-3">
-                        {% for product in favorites %}
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card h-100">
-                                {% if product.images.all %}
-                                <img src="{{ product.images.all.0.image.url }}" class="card-img-top" alt="{{ product.name }}">
-                                {% endif %}
-                                <div class="card-body d-flex flex-column">
-                                    <h5 class="card-title">{{ product.name }}</h5>
-                                    <p class="card-text">{{ product.price }} DT</p>
-                                    <div class="mt-auto d-flex gap-2">
-                                        <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary btn-sm">Voir</a>
-                                        <form action="{% url 'toggle_favorite' product.id %}" method="post" class="m-0">
-                                            {% csrf_token %}
-                                            <button class="btn btn-outline-danger btn-sm">Retirer</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <p>Aucun produit en favori.</p>
-                {% endif %}
-            </section>
-        </div>
+<!-- Profile header -->
+<div class="sb-profile-header">
+  <div class="container">
+    <div class="d-flex align-items-center gap-4">
+      <div class="sb-avatar-lg">{{ user.username|slice:":1"|upper }}</div>
+      <div>
+        <h1 class="sb-profile-name">{{ user.get_full_name|default:user.username }}</h1>
+        <p class="sb-profile-email"><i class="bi bi-envelope me-1"></i>{{ user.email }}</p>
+      </div>
     </div>
+  </div>
 </div>
 
-    
+<div class="container py-5">
+  <div class="row g-4">
+
+    <!-- Left: form -->
+    <div class="col-lg-4">
+      <div class="sb-card">
+        <div class="sb-section-label"><i class="bi bi-person"></i>Mes informations</div>
+        <form method="post" novalidate>
+          {% csrf_token %}
+          {% for field in form %}
+          <div class="mb-3">
+            <label class="sb-field-label">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+            <div style="color:#b91c1c;font-size:.78rem;margin-top:4px;">{{ field.errors|striptags }}</div>
+            {% endif %}
+          </div>
+          {% endfor %}
+          <button type="submit" class="sb-btn-gold w-100 justify-content-center mt-2">
+            <i class="bi bi-check2"></i> Enregistrer
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Right: orders + favorites -->
+    <div class="col-lg-8">
+
+      <!-- Orders -->
+      <div class="sb-card mb-4">
+        <div class="sb-section-label"><i class="bi bi-bag"></i>Mes commandes récentes</div>
+        {% if orders %}
+          {% for order in orders %}
+          <div class="sb-order-row">
+            <div>
+              <a href="{% url 'order_detail' order.id %}" class="sb-order-ref">{{ order.reference }}</a>
+              <div style="font-size:.75rem;color:var(--muted);margin-top:2px;"><i class="bi bi-calendar3 me-1"></i>{{ order.created_at|date:"d M Y" }}</div>
+            </div>
+            <div class="text-end">
+              <div class="sb-order-price mb-1">{{ order.total_price }} DT</div>
+              <span class="status-badge {% if order.status == 'pending' %}status-pending{% elif order.status == 'delivered' %}status-delivered{% else %}status-canceled{% endif %}">
+                {{ order.get_status_display }}
+              </span>
+            </div>
+          </div>
+          {% endfor %}
+          <a href="{% url 'my_orders' %}" class="sb-btn-outline mt-4 d-inline-flex" style="font-size:.8rem;">
+            Voir toutes mes commandes <i class="bi bi-arrow-right"></i>
+          </a>
+        {% else %}
+          <div class="sb-empty-sm"><i class="bi bi-bag"></i>Aucune commande pour l'instant.</div>
+        {% endif %}
+      </div>
+
+      <!-- Favorites -->
+      <div class="sb-card">
+        <div class="sb-section-label"><i class="bi bi-heart"></i>Mes favoris</div>
+        {% if favorites %}
+          <div class="sb-fav-grid">
+            {% for product in favorites %}
+            <div class="sb-fav-card">
+              {% if product.images.all %}
+              <img src="{{ product.images.all.0.image.url }}" class="sb-fav-img" alt="{{ product.name }}">
+              {% else %}
+              <div class="sb-fav-img d-flex align-items-center justify-content-center text-muted" style="background:#f4eadf;"><i class="bi bi-image" style="font-size:1.5rem;"></i></div>
+              {% endif %}
+              <div class="sb-fav-body">
+                <div class="sb-fav-name">{{ product.name }}</div>
+                <div class="sb-fav-price">{{ product.price }} DT</div>
+              </div>
+              <div class="sb-fav-actions">
+                <a href="{% url 'product_detail' product.id %}" class="sb-btn-outline" style="flex:1;justify-content:center;padding:6px;font-size:.75rem;">Voir</a>
+                <form action="{% url 'toggle_favorite' product.id %}" method="post" class="m-0">
+                  {% csrf_token %}
+                  <button class="sb-btn-fav" style="padding:6px 10px;"><i class="bi bi-heart-fill"></i></button>
+                </form>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="sb-empty-sm"><i class="bi bi-heart"></i>Aucun favori pour l'instant.</div>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
 </div>
 {% endblock %}

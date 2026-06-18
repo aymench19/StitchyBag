@@ -1,126 +1,468 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block extra_head %}
+<style>
+/* ── Dashboard shell ── */
+.dash-wrap {
+  min-height: calc(100vh - 68px);
+  background: #0E1824;
+  padding: 0 0 60px;
+}
+
+/* ── Top header bar ── */
+.dash-header {
+  background: #0E1824;
+  padding: 36px 0 28px;
+  border-bottom: 1px solid rgba(201,169,110,.12);
+  margin-bottom: 36px;
+  position: relative;
+  overflow: hidden;
+}
+.dash-header::before {
+  content: '';
+  position: absolute;
+  top: -60%; right: -5%;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(201,169,110,.06) 0%, transparent 65%);
+  pointer-events: none;
+}
+.dash-eyebrow {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: #C9A96E; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 8px;
+}
+.dash-eyebrow::before {
+  content: ''; width: 18px; height: 1px;
+  background: #C9A96E;
+}
+.dash-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.2rem; font-weight: 600;
+  color: #F0EAE0; margin: 0; line-height: 1.1;
+}
+.dash-subtitle {
+  font-size: .82rem; color: rgba(240,234,224,.4);
+  margin: 6px 0 0; letter-spacing: .03em;
+}
+.dash-live-dot {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: .75rem; font-weight: 600;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: rgba(240,234,224,.45);
+}
+.dash-live-dot::before {
+  content: ''; width: 7px; height: 7px;
+  border-radius: 50%; background: #4ade80;
+  box-shadow: 0 0 8px rgba(74,222,128,.6);
+  animation: pulse-green 2s ease-in-out infinite;
+}
+@keyframes pulse-green {
+  0%,100% { box-shadow: 0 0 6px rgba(74,222,128,.6); }
+  50% { box-shadow: 0 0 14px rgba(74,222,128,.9); }
+}
+
+/* ── KPI cards ── */
+.dash-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.kpi-card {
+  background: #13212F;
+  border: 1px solid rgba(201,169,110,.1);
+  border-radius: 16px;
+  padding: 24px 26px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .25s, transform .2s;
+}
+.kpi-card:hover {
+  border-color: rgba(201,169,110,.3);
+  transform: translateY(-2px);
+}
+.kpi-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--kpi-accent, #C9A96E), transparent);
+  opacity: 0;
+  transition: opacity .3s;
+}
+.kpi-card:hover::after { opacity: 1; }
+.kpi-label {
+  font-size: 10.5px; font-weight: 700;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: rgba(240,234,224,.35); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.kpi-label i { font-size: 14px; color: var(--kpi-accent, #C9A96E); }
+.kpi-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.8rem; font-weight: 600;
+  color: #F0EAE0; line-height: 1; margin-bottom: 6px;
+}
+.kpi-num-unit {
+  font-size: 1rem; font-weight: 400;
+  color: rgba(240,234,224,.45); margin-left: 4px;
+}
+.kpi-sub {
+  font-size: .75rem; color: rgba(240,234,224,.3);
+  letter-spacing: .04em;
+}
+
+/* Revenue card (wide) */
+.kpi-revenue { --kpi-accent: #C9A96E; }
+.kpi-revenue .kpi-num { color: #C9A96E; font-size: 3.2rem; }
+
+/* ── Middle row: bar + actions ── */
+.dash-mid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+@media(max-width:900px) { .dash-mid { grid-template-columns: 1fr; } }
+
+/* ── Orders distribution card ── */
+.dash-chart-card {
+  background: #13212F;
+  border: 1px solid rgba(201,169,110,.1);
+  border-radius: 16px;
+  padding: 28px 28px 24px;
+}
+.dash-card-heading {
+  font-size: 10.5px; font-weight: 700;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: rgba(240,234,224,.35); margin-bottom: 24px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.dash-card-heading span { color: rgba(240,234,224,.35); }
+
+/* Bar chart visual */
+.dash-bar-group { display: flex; flex-direction: column; gap: 16px; }
+.dash-bar-row { display: flex; align-items: center; gap: 14px; }
+.dash-bar-label {
+  font-size: .78rem; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: rgba(240,234,224,.45); min-width: 80px;
+}
+.dash-bar-track {
+  flex: 1; height: 8px; background: rgba(255,255,255,.06);
+  border-radius: 4px; overflow: hidden;
+}
+.dash-bar-fill {
+  height: 100%; border-radius: 4px;
+  transition: width .8s cubic-bezier(.4,0,.2,1);
+}
+.dash-bar-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem; font-weight: 600;
+  color: #F0EAE0; min-width: 28px; text-align: right;
+}
+
+/* ── Quick actions card ── */
+.dash-actions-card {
+  background: #13212F;
+  border: 1px solid rgba(201,169,110,.1);
+  border-radius: 16px;
+  padding: 28px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.dash-action-btn {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(201,169,110,.15);
+  background: rgba(201,169,110,.04);
+  color: rgba(240,234,224,.7);
+  text-decoration: none;
+  font-size: .84rem; font-weight: 500;
+  letter-spacing: .04em;
+  transition: background .2s, border-color .2s, color .2s, transform .15s;
+}
+.dash-action-btn:hover {
+  background: rgba(201,169,110,.1);
+  border-color: rgba(201,169,110,.4);
+  color: #C9A96E;
+  transform: translateX(4px);
+}
+.dash-action-btn i {
+  font-size: 16px; color: #C9A96E;
+  flex-shrink: 0;
+}
+.dash-action-sep {
+  height: 1px; background: rgba(201,169,110,.08);
+  margin: 4px 0;
+}
+
+/* ── Orders table ── */
+.dash-table-card {
+  background: #13212F;
+  border: 1px solid rgba(201,169,110,.1);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.dash-table-head {
+  padding: 22px 28px 16px;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.dash-table {
+  width: 100%; border-collapse: collapse;
+}
+.dash-table thead th {
+  font-size: 9.5px; font-weight: 700;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: rgba(240,234,224,.25);
+  padding: 0 28px 14px;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+  text-align: left;
+}
+.dash-table tbody tr {
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  transition: background .15s;
+}
+.dash-table tbody tr:hover { background: rgba(201,169,110,.04); }
+.dash-table tbody tr:last-child { border-bottom: none; }
+.dash-table td {
+  padding: 16px 28px;
+  font-size: .88rem;
+  color: rgba(240,234,224,.7);
+  vertical-align: middle;
+}
+.dash-ref {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem; font-weight: 600;
+  color: #F0EAE0;
+}
+.dash-client {
+  color: rgba(240,234,224,.55); font-size: .82rem;
+}
+.dash-amount {
+  font-weight: 600; color: #C9A96E;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.05rem;
+}
+
+/* Status badges */
+.dash-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: 4px 12px; border-radius: 50px;
+  border: 1px solid;
+}
+.dash-badge-pending  { color: #f59e0b; background: rgba(245,158,11,.1);  border-color: rgba(245,158,11,.25); }
+.dash-badge-delivered{ color: #4ade80; background: rgba(74,222,128,.1);  border-color: rgba(74,222,128,.25); }
+.dash-badge-canceled { color: #f87171; background: rgba(248,113,113,.1); border-color: rgba(248,113,113,.25); }
+
+/* Empty state */
+.dash-empty {
+  text-align: center; padding: 52px 24px;
+  color: rgba(240,234,224,.25); font-size: .88rem;
+}
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="mb-4">
-    <h1 class="fw-bold mb-2">📊 Tableau de bord</h1>
-    <p class="text-muted">Vue d’ensemble de votre boutique Crochet Bags.</p>
-</div>
+<div class="dash-wrap">
 
-<div class="row g-4 mb-4">
-    <div class="col-md-6 col-xl-3">
-        <div class="card shadow-sm border-0 rounded-4 h-100">
-            <div class="card-body d-flex align-items-center justify-content-between">
-                <div>
-                    <p class="text-muted mb-1">Produits</p>
-                    <h2 class="fw-bold mb-0">{{ total_products }}</h2>
-                </div>
-                <div class="rounded-circle p-3 bg-light text-dark">
-                    <i class="bi bi-bag fs-4"></i>
-                </div>
+  <!-- Header -->
+  <div class="dash-header">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+        <div>
+          <div class="dash-eyebrow">StitchyBag Admin</div>
+          <h1 class="dash-title">Tableau de bord</h1>
+          <p class="dash-subtitle">Vue d'ensemble de votre boutique artisanale</p>
+        </div>
+        <div class="d-flex align-items-center gap-3 pt-1">
+          <span class="dash-live-dot">En ligne</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- KPI cards -->
+    <div class="dash-kpis">
+
+      <!-- Revenue -->
+      <div class="kpi-card kpi-revenue" style="grid-column: span 2; --kpi-accent:#C9A96E;">
+        <div class="kpi-label"><i class="bi bi-graph-up-arrow"></i>Chiffre d'affaires</div>
+        <div class="kpi-num">{{ revenue }}<span class="kpi-num-unit">DT</span></div>
+        <div class="kpi-sub">Commandes livrées uniquement</div>
+      </div>
+
+      <div class="kpi-card" style="--kpi-accent:#7dd3fc;">
+        <div class="kpi-label"><i class="bi bi-bag"></i>Produits</div>
+        <div class="kpi-num">{{ total_products }}</div>
+        <div class="kpi-sub">Dans le catalogue</div>
+      </div>
+
+      <div class="kpi-card" style="--kpi-accent:#a78bfa;">
+        <div class="kpi-label"><i class="bi bi-receipt"></i>Commandes total</div>
+        <div class="kpi-num">{{ total_orders }}</div>
+        <div class="kpi-sub">Depuis l'ouverture</div>
+      </div>
+
+      <div class="kpi-card" style="--kpi-accent:#fbbf24;">
+        <div class="kpi-label"><i class="bi bi-clock-history"></i>En attente</div>
+        <div class="kpi-num">{{ pending_orders }}</div>
+        <div class="kpi-sub">À traiter</div>
+      </div>
+
+      <div class="kpi-card" style="--kpi-accent:#4ade80;">
+        <div class="kpi-label"><i class="bi bi-truck"></i>Livrées</div>
+        <div class="kpi-num">{{ delivered_orders }}</div>
+        <div class="kpi-sub">Commandes accomplies</div>
+      </div>
+
+    </div>
+
+    <!-- Mid row -->
+    <div class="dash-mid">
+
+      <!-- Orders distribution bars -->
+      <div class="dash-chart-card">
+        <div class="dash-card-heading">
+          <span>Répartition des commandes</span>
+        </div>
+        <div class="dash-bar-group">
+
+          <div class="dash-bar-row">
+            <span class="dash-bar-label">Livrées</span>
+            <div class="dash-bar-track">
+              <div class="dash-bar-fill" style="width:{% if total_orders > 0 %}{% widthratio delivered_orders total_orders 100 %}{% else %}0{% endif %}%;background:#4ade80;"></div>
             </div>
-        </div>
-    </div>
+            <span class="dash-bar-val">{{ delivered_orders }}</span>
+          </div>
 
-    <div class="col-md-6 col-xl-3">
-        <div class="card shadow-sm border-0 rounded-4 h-100">
-            <div class="card-body d-flex align-items-center justify-content-between">
-                <div>
-                    <p class="text-muted mb-1">Commandes</p>
-                    <h2 class="fw-bold mb-0">{{ total_orders }}</h2>
-                </div>
-                <div class="rounded-circle p-3 bg-light text-dark">
-                    <i class="bi bi-cart-check fs-4"></i>
-                </div>
+          <div class="dash-bar-row">
+            <span class="dash-bar-label">En attente</span>
+            <div class="dash-bar-track">
+              <div class="dash-bar-fill" style="width:{% if total_orders > 0 %}{% widthratio pending_orders total_orders 100 %}{% else %}0{% endif %}%;background:#fbbf24;"></div>
             </div>
-        </div>
-    </div>
+            <span class="dash-bar-val">{{ pending_orders }}</span>
+          </div>
 
-    <div class="col-md-6 col-xl-3">
-        <div class="card shadow-sm border-0 rounded-4 h-100">
-            <div class="card-body d-flex align-items-center justify-content-between">
-                <div>
-                    <p class="text-muted mb-1">En attente</p>
-                    <h2 class="fw-bold mb-0">{{ pending_orders }}</h2>
-                </div>
-                <div class="rounded-circle p-3 bg-light text-warning">
-                    <i class="bi bi-clock-history fs-4"></i>
-                </div>
+          <div class="dash-bar-row">
+            <span class="dash-bar-label">Annulées</span>
+            <div class="dash-bar-track">
+              <div class="dash-bar-fill" id="canceled-bar" style="background:#f87171;"></div>
             </div>
+            <span class="dash-bar-val" id="canceled-val">—</span>
+          </div>
+
         </div>
+
+        <script>
+        (function(){
+          var total = {{ total_orders }};
+          var delivered = {{ delivered_orders }};
+          var pending = {{ pending_orders }};
+          var canceled = Math.max(0, total - delivered - pending);
+          var pct = total > 0 ? Math.round(canceled / total * 100) : 0;
+          document.getElementById('canceled-bar').style.width = pct + '%';
+          document.getElementById('canceled-val').textContent = canceled;
+        })();
+        </script>
+      </div>
+
+      <!-- Quick actions -->
+      <div class="dash-actions-card">
+        <div class="dash-card-heading"><span>Actions rapides</span></div>
+
+        <a href="/admin/shop/product/add/" class="dash-action-btn">
+          <i class="bi bi-plus-circle"></i>
+          Ajouter un produit
+        </a>
+        <a href="/admin/shop/product/" class="dash-action-btn">
+          <i class="bi bi-bag"></i>
+          Gérer les produits
+        </a>
+
+        <div class="dash-action-sep"></div>
+
+        <a href="/admin/shop/order/" class="dash-action-btn">
+          <i class="bi bi-list-ul"></i>
+          Toutes les commandes
+        </a>
+        <a href="/admin/shop/order/?status__exact=pending" class="dash-action-btn">
+          <i class="bi bi-clock-history"></i>
+          Commandes en attente
+        </a>
+
+        <div class="dash-action-sep"></div>
+
+        <a href="/admin/" class="dash-action-btn">
+          <i class="bi bi-grid"></i>
+          Interface Django Admin
+        </a>
+      </div>
+
     </div>
 
-    <div class="col-md-6 col-xl-3">
-        <div class="card shadow-sm border-0 rounded-4 h-100">
-            <div class="card-body d-flex align-items-center justify-content-between">
-                <div>
-                    <p class="text-muted mb-1">Livrées</p>
-                    <h2 class="fw-bold mb-0">{{ delivered_orders }}</h2>
-                </div>
-                <div class="rounded-circle p-3 bg-light text-success">
-                    <i class="bi bi-truck fs-4"></i>
-                </div>
-            </div>
+    <!-- Recent orders table -->
+    <div class="dash-table-card">
+      <div class="dash-table-head">
+        <div class="dash-card-heading" style="margin:0;">
+          <span>Dernières commandes</span>
         </div>
-    </div>
-</div>
+        <a href="/admin/shop/order/" style="font-size:.76rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#C9A96E;text-decoration:none;opacity:.7;transition:opacity .2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.7">
+          Voir tout <i class="bi bi-arrow-right"></i>
+        </a>
+      </div>
 
-<div class="row g-4">
-    <div class="col-lg-7">
-        <div class="card shadow-sm border-0 rounded-4">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h4 class="fw-bold mb-0">💰 Chiffre d’affaires</h4>
-                    <span class="badge rounded-pill bg-success-subtle text-success">En croissance</span>
-                </div>
-                <h1 class="fw-bold text-success mb-0">{{ revenue }} DT</h1>
-            </div>
-        </div>
+      {% if recent_orders %}
+      <table class="dash-table">
+        <thead>
+          <tr>
+            <th>Référence</th>
+            <th>Client</th>
+            <th>Montant</th>
+            <th>Statut</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in recent_orders %}
+          <tr>
+            <td>
+              <a href="/admin/shop/order/{{ order.id }}/change/" style="text-decoration:none;">
+                <span class="dash-ref">{{ order.reference }}</span>
+              </a>
+            </td>
+            <td>
+              <div style="color:rgba(240,234,224,.75);font-size:.88rem;">{{ order.first_name }} {{ order.last_name }}</div>
+              <div class="dash-client">{{ order.created_at|date:"d M Y" }}</div>
+            </td>
+            <td><span class="dash-amount">{{ order.total_price }} DT</span></td>
+            <td>
+              {% if order.status == 'delivered' %}
+              <span class="dash-badge dash-badge-delivered"><i class="bi bi-check-circle-fill"></i>{{ order.get_status_display }}</span>
+              {% elif order.status == 'pending' %}
+              <span class="dash-badge dash-badge-pending"><i class="bi bi-clock-fill"></i>{{ order.get_status_display }}</span>
+              {% else %}
+              <span class="dash-badge dash-badge-canceled"><i class="bi bi-x-circle-fill"></i>{{ order.get_status_display }}</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div class="dash-empty">
+        <i class="bi bi-inbox" style="font-size:2rem;display:block;margin-bottom:12px;"></i>
+        Aucune commande pour l'instant.
+      </div>
+      {% endif %}
     </div>
 
-    <div class="col-lg-5">
-        <div class="card shadow-sm border-0 rounded-4">
-            <div class="card-body">
-                <h4 class="fw-bold mb-3">⚡ Actions rapides</h4>
-                <a href="/admin/shop/product/" class="btn btn-outline-dark w-100 mb-2">Gérer les produits</a>
-                <a href="/admin/shop/order/" class="btn btn-outline-dark w-100">Gérer les commandes</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="card shadow-sm border-0 rounded-4 mt-4">
-    <div class="card-body">
-        <h4 class="fw-bold mb-3">🛒 Dernières commandes</h4>
-        <div class="table-responsive">
-            <table class="table align-middle">
-                <thead>
-                <tr>
-                    <th>Référence</th>
-                    <th>Client</th>
-                    <th>Montant</th>
-                    <th>Statut</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for order in recent_orders %}
-                <tr>
-                    <td>{{ order.reference }}</td>
-                    <td>{{ order.first_name }} {{ order.last_name }}</td>
-                    <td>{{ order.total_price }} DT</td>
-                    <td>
-                        {% if order.status == 'delivered' %}
-                        <span class="badge bg-success">{{ order.get_status_display }}</span>
-                        {% elif order.status == 'pending' %}
-                        <span class="badge bg-warning text-dark">{{ order.get_status_display }}</span>
-                        {% else %}
-                        <span class="badge bg-danger">{{ order.get_status_display }}</span>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+  </div>
 </div>
 {% endblock %}

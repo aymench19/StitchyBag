@@ -1,63 +1,134 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block extra_head %}
+<style>
+.sb-cart-card { background:#fff; border-radius:16px; box-shadow:0 2px 20px rgba(27,45,69,.07); overflow:hidden; margin-bottom:16px; }
+.sb-cart-item { display:flex; align-items:center; gap:18px; padding:20px 24px; border-bottom:1px solid #f5f0ea; transition:background .15s; }
+.sb-cart-item:hover { background:#fdfaf7; }
+.sb-cart-item:last-child { border-bottom:none; }
+.sb-cart-img { width:88px; height:88px; border-radius:12px; object-fit:cover; flex-shrink:0; background:#f4eadf; }
+.sb-cart-name { font-weight:600; font-size:.95rem; margin:0 0 3px; color:var(--navy); }
+.sb-cart-unit { font-size:.8rem; color:var(--muted); }
+.sb-qty-form { display:flex; align-items:center; gap:8px; }
+.sb-qty-input { width:60px; border:1.5px solid #e8e0d6; border-radius:8px; padding:6px 10px; font-size:.88rem; text-align:center; outline:none; font-family:inherit; transition:border-color .2s; }
+.sb-qty-input:focus { border-color:var(--gold); }
+.sb-btn-update { background:transparent; border:1.5px solid #e2d9cf; border-radius:7px; padding:6px 12px; font-size:.78rem; font-weight:500; color:var(--navy); cursor:pointer; font-family:inherit; transition:border-color .2s,color .2s; }
+.sb-btn-update:hover { border-color:var(--gold); color:var(--gold); }
+.sb-remove { background:none; border:none; color:#b91c1c; font-size:.78rem; cursor:pointer; padding:0; text-decoration:underline; font-family:inherit; opacity:.7; transition:opacity .2s; }
+.sb-remove:hover { opacity:1; }
+.sb-cart-sub { font-weight:700; font-size:1rem; min-width:72px; text-align:right; color:var(--navy); }
+.sb-summary-card { background:#fff; border-radius:16px; box-shadow:0 2px 20px rgba(27,45,69,.07); padding:26px; position:sticky; top:84px; }
+.sb-summary-eyebrow { font-size:10px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); margin-bottom:20px; }
+.sb-summary-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; font-size:.9rem; color:var(--navy); }
+.sb-summary-divider { height:1px; background:#f0ebe4; margin:16px 0; }
+.sb-summary-total { display:flex; justify-content:space-between; align-items:center; font-weight:700; font-size:1.05rem; }
+.sb-btn-checkout { display:flex; align-items:center; justify-content:center; gap:10px; width:100%; background:var(--navy); color:#fff; border:none; border-radius:10px; padding:15px; font-size:.92rem; font-weight:600; cursor:pointer; text-decoration:none; margin-top:16px; transition:background .2s,transform .15s; font-family:inherit; letter-spacing:.04em; }
+.sb-btn-checkout:hover { background:#0D1A2E; color:#fff; transform:translateY(-1px); }
+.sb-trust { margin-top:20px; display:flex; flex-direction:column; gap:10px; padding-top:18px; border-top:1px solid #f0ebe4; }
+.sb-trust-item { display:flex; align-items:center; gap:10px; font-size:.78rem; color:var(--muted); }
+.sb-trust-item i { color:var(--gold); font-size:1rem; }
+.sb-empty-cart { text-align:center; padding:80px 24px; background:#fff; border-radius:20px; box-shadow:0 2px 20px rgba(27,45,69,.07); }
+.sb-empty-icon { width:72px; height:72px; border-radius:50%; background:#f4eadf; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; font-size:1.8rem; color:var(--gold); }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="mb-4">
-    <h2 class="fw-bold mb-2">🛒 Mon panier</h2>
-    <p class="text-muted">Retrouvez vos pièces préférées avant la commande finale.</p>
+
+<div class="sb-page-header">
+  <div class="container">
+    <span class="sb-eyebrow"><i class="bi bi-bag me-1"></i>Votre sélection</span>
+    <h1>Mon panier</h1>
+    <p>Retrouvez vos pièces préférées avant de finaliser votre commande.</p>
+  </div>
 </div>
 
+<div class="container py-5">
 {% if cart_items %}
 <div class="row g-4">
-    <div class="col-lg-8">
-        {% for item in cart_items %}
-        <div class="cart-item-card d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
-            <div class="d-flex align-items-center gap-3">
-                {% if item.product.images.first %}
-                <img src="{{ item.product.images.first.image.url }}" class="cart-item-image" alt="{{ item.product.name }}">
-                {% else %}
-                <div class="cart-item-image d-flex align-items-center justify-content-center text-muted" style="background: #f4eadf;">Aucune image</div>
-                {% endif %}
-                <div>
-                    <h5 class="mb-1">{{ item.product.name }}</h5>
-                    <p class="text-muted mb-0">{{ item.product.price }} DT</p>
-                </div>
-            </div>
 
-            <div class="d-flex align-items-center gap-2">
-                <form method="post" action="{% url 'cart_update' item.product.id %}" class="d-flex align-items-center gap-2">
-                    {% csrf_token %}
-                    <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control quantity-control">
-                    <button class="btn btn-outline-dark">Mettre à jour</button>
-                </form>
-            </div>
+  <!-- Articles -->
+  <div class="col-lg-8">
+    <div class="sb-cart-card">
+      {% for item in cart_items %}
+      <div class="sb-cart-item">
+        {% if item.product.images.first %}
+        <img src="{{ item.product.images.first.image.url }}" class="sb-cart-img" alt="{{ item.product.name }}">
+        {% else %}
+        <div class="sb-cart-img d-flex align-items-center justify-content-center"><i class="bi bi-image text-muted"></i></div>
+        {% endif %}
 
-            <div class="text-md-end">
-                <div class="fw-bold">{{ item.subtotal }} DT</div>
-                <a href="{% url 'cart_remove' item.product.id %}" class="btn btn-link text-danger p-0 mt-2">Supprimer</a>
-            </div>
+        <div style="flex:1;min-width:0;">
+          <div class="sb-cart-name">{{ item.product.name }}</div>
+          <div class="sb-cart-unit">{{ item.product.price }} DT / unité</div>
+          <div class="d-flex align-items-center gap-3 mt-2 flex-wrap">
+            <form method="post" action="{% url 'cart_update' item.product.id %}" class="sb-qty-form">
+              {% csrf_token %}
+              <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="sb-qty-input">
+              <button type="submit" class="sb-btn-update">Mettre à jour</button>
+            </form>
+            <a href="{% url 'cart_remove' item.product.id %}" class="sb-remove"><i class="bi bi-trash me-1"></i>Supprimer</a>
+          </div>
         </div>
-        {% endfor %}
+
+        <div class="sb-cart-sub">{{ item.subtotal }} DT</div>
+      </div>
+      {% endfor %}
     </div>
 
-    <div class="col-lg-4">
-        <div class="summary-card">
-            <h4 class="fw-bold mb-3">Résumé</h4>
-            <div class="d-flex justify-content-between mb-2">
-                <span>Total estimé</span>
-                <strong>{{ total }} DT</strong>
-            </div>
-            <p class="text-muted small">Livraison soignée et paiement sécurisé.</p>
-            {% if user.is_authenticated %}
-            <a href="{% url 'checkout' %}" class="btn btn-dark w-100 btn-lg">Passer la commande</a>
-            {% else %}
-            <a href="{% url 'login' %}" class="btn btn-dark w-100 btn-lg">Connectez-vous pour commander</a>
-            {% endif %}
-        </div>
+    <a href="{% url 'home' %}#collection" class="sb-btn-outline d-inline-flex">
+      <i class="bi bi-arrow-left"></i> Continuer mes achats
+    </a>
+  </div>
+
+  <!-- Résumé -->
+  <div class="col-lg-4">
+    <div class="sb-summary-card">
+      <div class="sb-summary-eyebrow">Résumé de commande</div>
+
+      <div class="sb-summary-row">
+        <span>Sous-total</span>
+        <span>{{ total }} DT</span>
+      </div>
+      <div class="sb-summary-row">
+        <span>Livraison</span>
+        <span style="color:#1a6b3a;font-weight:600;"><i class="bi bi-check-circle me-1"></i>Gratuite</span>
+      </div>
+      <div class="sb-summary-divider"></div>
+      <div class="sb-summary-total">
+        <span>Total</span>
+        <span style="color:var(--gold);font-size:1.3rem;font-family:'Cormorant Garamond',serif;">{{ total }} DT</span>
+      </div>
+
+      {% if user.is_authenticated %}
+      <a href="{% url 'checkout' %}" class="sb-btn-checkout">
+        <i class="bi bi-lock"></i> Passer la commande
+      </a>
+      {% else %}
+      <a href="{% url 'login' %}" class="sb-btn-checkout">
+        <i class="bi bi-person"></i> Se connecter pour commander
+      </a>
+      {% endif %}
+
+      <div class="sb-trust">
+        <div class="sb-trust-item"><i class="bi bi-shield-lock"></i>Paiement 100% sécurisé</div>
+        <div class="sb-trust-item"><i class="bi bi-truck"></i>Livraison soignée partout</div>
+        <div class="sb-trust-item"><i class="bi bi-arrow-counterclockwise"></i>Retours sous 14 jours</div>
+      </div>
     </div>
+  </div>
+
 </div>
+
 {% else %}
-<div class="alert alert-light rounded-4 shadow-sm">
-    Votre panier est vide. Découvrez nos créations artisanales pour le remplir.
+<div class="sb-empty-cart" style="max-width:520px;margin:0 auto;">
+  <div class="sb-empty-icon"><i class="bi bi-bag"></i></div>
+  <h4 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;margin-bottom:10px;color:var(--navy);">Votre panier est vide</h4>
+  <p style="color:var(--muted);margin-bottom:28px;line-height:1.7;">Découvrez nos créations artisanales et trouvez votre pièce unique.</p>
+  <a href="{% url 'home' %}#collection" class="sb-btn-gold">
+    Découvrir la collection <i class="bi bi-arrow-right"></i>
+  </a>
 </div>
 {% endif %}
+</div>
 {% endblock %}
